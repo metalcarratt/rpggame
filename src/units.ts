@@ -1,6 +1,6 @@
 import { Ref, ref } from "vue";
 import { images, imgData } from "./imageLoader";
-import { Action, SUMMON_SPIRIT_FRIEND_ACTION } from "./actions";
+import { Action, SUMMON_SPIRIT_FRIEND_ACTION, WAIT_ACTION } from "./actions";
 import { xy } from "./map";
 import { findMoveTo } from "./moving";
 import { findVisible } from "./visibility";
@@ -30,7 +30,8 @@ export const playerUnit = (at: xy): Unit => ({
     team: Team.PLAYER,
     movement: 2,
     actions: [
-        SUMMON_SPIRIT_FRIEND_ACTION
+        SUMMON_SPIRIT_FRIEND_ACTION,
+        WAIT_ACTION
     ]
 });
 
@@ -51,7 +52,9 @@ export const mouseUnit = (at: xy): Unit => ({
     y: at.y,
     team: Team.PLAYER,
     movement: 4,
-    actions: []
+    actions: [
+        WAIT_ACTION
+    ]
 });
 
 export let units: Unit[] = [];

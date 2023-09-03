@@ -7,7 +7,7 @@ import { findFreeRangeAround } from "./util";
 export type Action = {
     label: string,
     img: string,
-    range: number,
+    range?: number,
     meta?: any,
     perform: (at: xy) => void,
     precondition: () => boolean
@@ -33,13 +33,24 @@ export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
     }
 }
 
+export const WAIT_ACTION: Action = {
+    label: 'Wait',
+    img: '',
+    perform: () => {},
+    precondition: () => true
+}
+
 let clickedAction: Action | null = null;
 
 export const clickAction = (action: Action) => {
     clearMoveTo();
-    actionAt = findFreeRangeAround(currentTurnUnit(), action.range);
-    clickedAction = action;
-    render();
+    if (action.range) {
+        actionAt = findFreeRangeAround(currentTurnUnit(), action.range);
+        clickedAction = action;
+        render();
+    } else {
+        performAction({x:0, y:0});
+    }
 }
 
 export const performAction = (at: xy) => {

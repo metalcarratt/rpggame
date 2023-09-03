@@ -1,0 +1,20 @@
+# rpggame
+
+TODO:
+- wait action
+- recall action
+- boss movement - idle
+- boss movement - active
+- fighting:
+  - fight action
+  - hp and armour
+  - boss fight action
+  - death
+- traps:
+  - lay stumble trap action
+- formations:
+  - lay flags action
+  - lay plate action
+  - active formation action
+  - trap boss
+  - kill boss
