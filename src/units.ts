@@ -1,10 +1,12 @@
 import { Ref, ref } from "vue";
 import { images, imgData } from "./imageLoader";
-import { Action, SUMMON_SPIRIT_FRIEND_ACTION, WAIT_ACTION } from "./actions";
+import { Action } from "./actions/actions";
 import { xy } from "./map";
 import { findMoveTo } from "./moving";
 import { findVisible } from "./visibility";
 import { render } from "./canvas";
+import { RECALL_SPIRIT_FRIEND_ACTION, SUMMON_SPIRIT_FRIEND_ACTION } from "./actions/spiritFriend";
+import { WAIT_ACTION } from "./actions/commonActions";
 
 export enum Team {
     PLAYER,
@@ -31,6 +33,7 @@ export const playerUnit = (at: xy): Unit => ({
     movement: 2,
     actions: [
         SUMMON_SPIRIT_FRIEND_ACTION,
+        RECALL_SPIRIT_FRIEND_ACTION,
         WAIT_ACTION
     ]
 });
@@ -70,6 +73,14 @@ export function initUnits() {
 export function addUnit(unit: Unit) {
     units.push(unit);
     turnStack.value.push(unit);
+}
+
+export function removeUnit(name: string) {
+    const unitIndex = units.findIndex(unit => unit.name === name);
+    units.splice(unitIndex, 1);
+
+    const stackIndex = turnStack.value.findIndex(unit => unit.name === name);
+    turnStack.value.splice(stackIndex, 1);
 }
 
 export const unitsZero = () => units = [];

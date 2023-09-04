@@ -1,8 +1,6 @@
 # rpggame
 
 TODO:
-- wait action
-- recall action
 - boss movement - idle
 - boss movement - active
 - fighting:

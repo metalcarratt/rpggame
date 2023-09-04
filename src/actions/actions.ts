@@ -1,8 +1,8 @@
-import { render } from "./canvas";
-import { xy } from "./map";
-import { clearMoveTo } from "./moving";
-import { Unit, addUnit, currentTurnUnit, mouseUnit, nextUnitTurn, units } from "./units";
-import { findFreeRangeAround } from "./util";
+import { render } from "../canvas";
+import { xy } from "../map";
+import { clearMoveTo } from "../moving";
+import { currentTurnUnit, mouseUnit, nextUnitTurn } from "../units";
+import { findFreeRangeAround } from "../util";
 
 export type Action = {
     label: string,
@@ -17,29 +17,6 @@ export let actionAt: xy[] = [];
 
 export const clearActionAt = () => actionAt = [];
 
-export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
-    label: 'Spirit Friend',
-    img: '/mouse_profile.png',
-    range: 1,
-    meta: {
-        deployed: false
-    },
-    perform(at: xy) {
-        addUnit(mouseUnit(at));
-        this.meta['deployed'] = true;
-    },
-    precondition() {
-        return this.meta['deployed'] === false;
-    }
-}
-
-export const WAIT_ACTION: Action = {
-    label: 'Wait',
-    img: '',
-    perform: () => {},
-    precondition: () => true
-}
-
 let clickedAction: Action | null = null;
 
 export const clickAction = (action: Action) => {
@@ -49,6 +26,7 @@ export const clickAction = (action: Action) => {
         clickedAction = action;
         render();
     } else {
+        clickedAction = action;
         performAction({x:0, y:0});
     }
 }

@@ -11,15 +11,16 @@
 <script setup>
 import ActionButton from './ActionButton.vue';
 import { currentTurnUnit } from '../units';
-import { getCurrentActions } from '../actions';
+import { getCurrentActions } from '../actions/actions';
 </script>
 
 <style scoped>
 #actions {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     justify-content: right;
     align-items: flex-end;
+    column-gap: 10px;
 
     margin: 20px;
 }

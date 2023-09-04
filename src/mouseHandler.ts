@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { moveCharacter, moveTo } from './moving';
-import { actionAt, performAction } from "./actions";
+import { actionAt, performAction } from "./actions/actions";
 import { xy } from "./map";
 import { CELL_SIZE, dpi, getCanvas, offset, render } from "./canvas";
 

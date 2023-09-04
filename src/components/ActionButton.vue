@@ -7,7 +7,7 @@
 
 <script setup>
 import { defineProps } from 'vue';
-import { Action, clickAction } from '../actions';
+import { Action, clickAction } from '../actions/actions';
 
 const props = defineProps({
     action: {
