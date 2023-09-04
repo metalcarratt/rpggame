@@ -2,7 +2,7 @@ import { Action } from "./actions";
 
 export const WAIT_ACTION: Action = {
     label: 'Wait',
-    img: '',
+    img: '/waiting.png',
     perform: () => {},
     precondition: () => true
 }

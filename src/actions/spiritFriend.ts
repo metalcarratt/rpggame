@@ -8,7 +8,7 @@ const DEPLOYED_ATTRIBUTE = 'deployed';
 
 export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
     label: SUMMON_LABEL,
-    img: IMG,
+    img: 'mouse_summon.png',
     range: 1,
     meta: {
         [DEPLOYED_ATTRIBUTE]: false
@@ -24,7 +24,7 @@ export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
 
 export const RECALL_SPIRIT_FRIEND_ACTION: Action = {
     label: 'Recall',
-    img: IMG,
+    img: '/mouse_recall.png',
     perform() {
         console.log('perform recall');
         removeUnit('mouse');

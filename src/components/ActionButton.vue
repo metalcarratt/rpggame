@@ -1,7 +1,6 @@
 <template>
     <span class="action" @click="() => clickAction(props.action)">
         <img :src="props.action.img"/>
-        <label>{{ props.action.label }}</label>
     </span>
 </template>
 
@@ -38,12 +37,7 @@ const props = defineProps({
 }
 
 .action img {
-    width: 80px;
-    height: 80px;
-}
-
-.action label {
-    width: 80x;
-    display: block;
+    width: 120px;
+    height: 120px;
 }
 </style>
