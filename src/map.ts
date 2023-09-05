@@ -1,5 +1,5 @@
 import { findMoveTo } from "./moving";
-import { findVisible } from "./visibility";
+import { findPlayerVisible } from "./visibility";
 
 export let map = [
     [1,1,1,1,1,1,1,1,1,1],
@@ -22,7 +22,7 @@ export type xy = {
 export function initCharacter() {
     // console.log('init character');
     findMoveTo();
-    findVisible();
+    findPlayerVisible();
 }
 
 export function updateMap(newMap: number[][]) {

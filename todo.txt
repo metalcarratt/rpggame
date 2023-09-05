@@ -1,7 +1,6 @@
 # rpggame
 
 TODO:
-- boss movement - active
 - fighting:
   - fight action
   - hp and armour
@@ -10,8 +9,8 @@ TODO:
 - traps:
   - lay stumble trap action
 - formations:
-  - lay flags action
   - lay plate action
+  - lay flags action
   - active formation action
   - trap boss
   - kill boss

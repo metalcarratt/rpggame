@@ -1,7 +1,7 @@
 import { imgData } from "../imageLoader";
 import { Action } from "../actions/actions";
 import { findMoveTo } from "../moving";
-import { findVisible } from "../visibility";
+import { findPlayerVisible } from "../visibility";
 import { render } from "../canvas";
 import { playerUnit } from "./playerUnit";
 import { bossUnit } from "./spiderUnit";
@@ -47,7 +47,7 @@ export function removeUnit(name: string) {
 
 export const unitsZero = () => units = [];
 
-export const player = units.find(unit => unit.name === 'player') as Unit;
+export const player = () => units.find(unit => unit.name === 'player') as Unit;
 
 export const playerTeam = () => units.filter(unit => unit.team === Team.PLAYER);
 
@@ -69,7 +69,7 @@ export function nextUnitTurn(): void {
     } else {
         console.log(`player move`);
         findMoveTo();
-        findVisible();
+        findPlayerVisible();
         render();
     }
 }
