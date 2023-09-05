@@ -1,9 +1,9 @@
 import { xy } from "@/map";
-import { addUnit, currentTurnUnit, mouseUnit, removeUnit } from "@/units";
+import { addUnit, currentTurnUnit, removeUnit } from "@/units/units";
 import { Action } from "./actions";
+import { mouseUnit } from "@/units/spiritUnit";
 
 const SUMMON_LABEL = 'Spirit Friend';
-const IMG = '/mouse_profile.png';
 const DEPLOYED_ATTRIBUTE = 'deployed';
 
 export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {

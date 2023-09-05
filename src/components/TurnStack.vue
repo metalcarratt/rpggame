@@ -5,10 +5,10 @@
 </template>
 
 <script setup>
-import { turnStack } from '../units';
+import { getStack } from '../units/turnStack';
 const units = () => {
     // console.log(turnStack.value);
-    return turnStack.value;
+    return getStack();
 }
 </script>
 

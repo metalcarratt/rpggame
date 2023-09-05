@@ -1,8 +1,8 @@
 import { map, xy } from "./map";
 import { images } from "./imageLoader";
 import { visible } from "./visibility";
-import { currentTurnUnit, units } from "./units";
-import { moveCharacter, moveTo } from './moving';
+import { currentTurnUnit, units } from "./units/units";
+import { moveTo } from './moving';
 import { actionAt } from "./actions/actions";
 import { mouseAt, mouseMoveListener } from "./mouseHandler";
 

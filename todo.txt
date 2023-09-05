@@ -1,7 +1,6 @@
 # rpggame
 
 TODO:
-- boss movement - idle
 - boss movement - active
 - fighting:
   - fight action

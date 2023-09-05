@@ -1,5 +1,5 @@
 import { map, xy } from "./map";
-import { playerTeam } from "./units";
+import { playerTeam } from "./units/units";
 
 export let visible: boolean[][] = [];
 

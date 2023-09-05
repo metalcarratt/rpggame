@@ -3,6 +3,7 @@ import { moveCharacter, moveTo } from './moving';
 import { actionAt, performAction } from "./actions/actions";
 import { xy } from "./map";
 import { CELL_SIZE, dpi, getCanvas, offset, render } from "./canvas";
+import { nextUnitTurn } from "./units/units";
 
 export const mouseHover = ref(false);
 export const mouseAt: { x: number, y: number } = { x: -1, y: -1 };
@@ -41,7 +42,9 @@ export function clickCanvas() {
     console.log('click');
     if (mouseOverMoveTo()) {
         moveCharacter(mouseAt.x + offset.x, mouseAt.y + offset.y);
+        nextUnitTurn();
     } else if (mouseOverActionAt()) {
         performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y});
+        nextUnitTurn();
     }
 }

@@ -10,7 +10,7 @@
 
 <script setup>
 import ActionButton from './ActionButton.vue';
-import { currentTurnUnit } from '../units';
+import { currentTurnUnit } from '../units/units';
 import { getCurrentActions } from '../actions/actions';
 </script>
 

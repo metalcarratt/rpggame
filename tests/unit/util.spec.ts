@@ -1,6 +1,7 @@
-import { mouseUnit, units, unitsZero } from "@/units";
+import { units, unitsZero } from "@/units/units";
 import { updateMap } from "@/map";
 import { findFreeRangeAround, findFreeSpaceAround } from "@/util";
+import { mouseUnit } from "@/units/spiritUnit";
 
 const EMPTY_MAP = [
     [0,0,0],

@@ -1,5 +1,5 @@
 import { map, xy } from "./map";
-import { units } from "./units";
+import { units } from "./units/units";
 
 export function findFreeSpaceAround(around: xy): xy[] {
     return findFreeSpaceAroundInternal(around, []);

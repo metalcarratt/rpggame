@@ -1,7 +1,7 @@
 import { render } from "../canvas";
 import { xy } from "../map";
 import { clearMoveTo } from "../moving";
-import { currentTurnUnit, mouseUnit, nextUnitTurn } from "../units";
+import { currentTurnUnit, nextUnitTurn } from "../units/units";
 import { findFreeRangeAround } from "../util";
 
 export type Action = {
@@ -28,6 +28,7 @@ export const clickAction = (action: Action) => {
     } else {
         clickedAction = action;
         performAction({x:0, y:0});
+        nextUnitTurn();
     }
 }
 
@@ -35,7 +36,7 @@ export const performAction = (at: xy) => {
     clickedAction?.perform(at);
     clickedAction = null;
     clearActionAt();
-    nextUnitTurn();
+    
 }
 
 export function getCurrentActions(): Action[] {
