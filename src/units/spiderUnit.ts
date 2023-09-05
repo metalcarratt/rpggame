@@ -1,7 +1,7 @@
 import { xy } from "@/map";
-import { Team, Unit, player } from "./units";
+import { Team, Unit, attackUnit, player } from "./units";
 import { images } from "@/imageLoader";
-import { findFreeRangeAround, findSpaceClosestTo } from "@/util";
+import { findFreeRangeAround, findSpaceClosestTo, isNextTo } from "@/util";
 import { moveCharacter } from "@/moving";
 import { findVisibleTo } from "@/visibility";
 
@@ -10,6 +10,10 @@ export const bossUnit = (at: xy): Unit => ({
     img: images.spider,
     x: at.x,
     y: at.y,
+    hp: 2,
+    armour: 10,
+    qi: 0,
+    power: 10,
     team: Team.MONSTER,
     movement: 8,
     actions: [],
@@ -19,10 +23,18 @@ export const bossUnit = (at: xy): Unit => ({
         const playerUnit = player();
         if (visible[playerUnit.y][playerUnit.x]) {
             console.log('can see player');
-            // charge
-            const range = findFreeRangeAround({x: this.x, y: this.y}, 8);
-            const closest = findSpaceClosestTo(visible, range, playerUnit, this);
-            moveCharacter(closest.x, closest.y);
+
+            if (isNextTo(this, playerUnit)) {
+                // attack
+                console.log('ATTACK!!');
+                attackUnit(this, playerUnit);
+                
+            } else {
+                // charge
+                const range = findFreeRangeAround({x: this.x, y: this.y}, 8);
+                const closest = findSpaceClosestTo(visible, range, playerUnit, this);
+                moveCharacter(closest.x, closest.y);
+            }
         } else {
             console.log('can\'t see player');
             // idle

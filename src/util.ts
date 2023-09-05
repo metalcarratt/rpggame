@@ -46,14 +46,16 @@ export function findFreeRangeAround(around: xy, range: number): xy[] {
     return spacesAround;
 }
 
+export function isNextTo(from: xy, to: xy) {
+    return from.x >= to.x - 1 
+    && from.x <= to.x + 1 
+    && from.y >= to.y - 1 
+    && from.y <= to.y + 1
+}
+
 export function findSpaceClosestTo(spaces: boolean[][], moves: xy[], target: xy, from: xy): xy {
     const visibleLocations = moves.filter(move => spaces[move.y][move.x] && map[move.y][move.x] === 0);
-    const attackableLocations = visibleLocations.filter(move => 
-        move.x >= target.x - 1 
-        && move.x <= target.x + 1 
-        && move.y >= target.y - 1 
-        && move.y <= target.y + 1
-    );
+    const attackableLocations = visibleLocations.filter(move => isNextTo(move, target));
 
     let closestLocation = {x: -1, y: -1};
     let closestDistance = -1;

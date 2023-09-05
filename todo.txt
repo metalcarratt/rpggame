@@ -3,9 +3,8 @@
 TODO:
 - fighting:
   - fight action
-  - hp and armour
-  - boss fight action
   - death
+  - gradual movement
 - traps:
   - lay stumble trap action
 - formations:

@@ -20,6 +20,10 @@ export type Unit = {
     y: number,
     team: Team,
     movement: number,
+    hp: number,
+    armour: number,
+    qi: number,
+    power: number,
     actions: Action[],
     mobMove?: () => void
 }
@@ -71,5 +75,21 @@ export function nextUnitTurn(): void {
         findMoveTo();
         findPlayerVisible();
         render();
+    }
+}
+
+export function attackUnit(attacker: Unit, attackee: Unit) {
+    if (attackee.armour >= attacker.power) {
+        attackee.armour -= attacker.power;
+
+    } else {
+        const remainingPower = attacker.power - attackee.armour;
+        attackee.armour = 0;
+        attackee.hp -= remainingPower;
+    }
+
+    if (attackee.hp < 0) {
+        // DEAD
+        attackee.hp = 0;
     }
 }

@@ -9,6 +9,10 @@ export const playerUnit = (at: xy): Unit => ({
     img: images.character,
     x: at.x,
     y: at.y,
+    hp: 2,
+    armour: 0,
+    qi: 60,
+    power: 2,
     team: Team.PLAYER,
     movement: 2,
     actions: [

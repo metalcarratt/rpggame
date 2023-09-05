@@ -1,7 +1,7 @@
 import { map, xy } from "./map";
 import { images } from "./imageLoader";
 import { visible } from "./visibility";
-import { currentTurnUnit, units } from "./units/units";
+import { Unit, currentTurnUnit, units } from "./units/units";
 import { moveTo } from './moving';
 import { actionAt } from "./actions/actions";
 import { mouseAt, mouseMoveListener } from "./mouseHandler";
@@ -37,13 +37,38 @@ function drawImage(img: HTMLImageElement, at: xy) {
         // console.log('visible');
         const canvas = getCanvas();
         const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        const x = (at.x - offset.x) * CELL_SIZE;
+        const y = (at.y - offset.y) * CELL_SIZE;
+
         ctx.drawImage(
             img,
-            (at.x - offset.x) * CELL_SIZE,
-            (at.y - offset.y) * CELL_SIZE,
+            x,
+            y,
             CELL_SIZE,
             CELL_SIZE
         );
+    }
+}
+
+function drawUnit(unit: Unit) {
+    drawImage(unit.img.img as HTMLImageElement, unit);
+
+    if (visible[unit.y][unit.x]) {
+        const canvas = getCanvas();
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        const x = (unit.x - offset.x) * CELL_SIZE;
+        const y = (unit.y - offset.y) * CELL_SIZE;
+        ctx.font = "25px Arial";
+
+        ctx.fillStyle = "white";
+        ctx.fillText(`${unit.armour}`, x + CELL_SIZE - 90, y + CELL_SIZE);
+
+        ctx.fillStyle = "red";
+        ctx.fillText(`${unit.hp}`, x + CELL_SIZE - 55, y + CELL_SIZE);
+
+        ctx.fillStyle = "yellow";
+        ctx.fillText(`${unit.qi}`, x + CELL_SIZE - 30, y + CELL_SIZE);
     }
 }
 
@@ -93,7 +118,7 @@ function drawCurrentUnitBg(ctx: CanvasRenderingContext2D) {
 
 function drawUnits() {
     for (const unit of units) {
-        drawImage(unit.img.img as HTMLImageElement, unit);
+        drawUnit(unit);
     }
 }
 
