@@ -16,12 +16,14 @@
     <button @click="shiftUp">↑</button>
     <button @click="shiftRight">→</button>
     <button @click="shiftDown">↓</button> -->
+    <GameOver />
 </template>
 
 <script setup>
 import GameHud from './components/GameHud.vue';
 import TurnStack from './components/TurnStack.vue';
 import ActionButtons from './components/ActionButtons.vue';
+import GameOver from './components/GameOver.vue';
 import { onMounted } from 'vue';
 import { initCanvas, shiftDown, shiftLeft, shiftRight, shiftUp } from './canvas';
 import { initImages } from './imageLoader';

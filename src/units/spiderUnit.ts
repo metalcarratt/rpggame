@@ -1,7 +1,7 @@
 import { xy } from "@/map";
 import { Team, Unit, attackUnit, player } from "./units";
 import { images } from "@/imageLoader";
-import { findFreeRangeAround, findSpaceClosestTo, isNextTo } from "@/util";
+import { findRangeAround, findSpaceClosestTo, isNextTo } from "@/util";
 import { moveCharacter } from "@/moving";
 import { findVisibleTo } from "@/visibility";
 
@@ -28,17 +28,17 @@ export const bossUnit = (at: xy): Unit => ({
                 // attack
                 console.log('ATTACK!!');
                 attackUnit(this, playerUnit);
-                
+
             } else {
                 // charge
-                const range = findFreeRangeAround({x: this.x, y: this.y}, 8);
+                const range = findRangeAround({x: this.x, y: this.y}, 8);
                 const closest = findSpaceClosestTo(visible, range, playerUnit, this);
                 moveCharacter(closest.x, closest.y);
             }
         } else {
             console.log('can\'t see player');
             // idle
-            const range = findFreeRangeAround({x: this.x, y: this.y}, 1);
+            const range = findRangeAround({x: this.x, y: this.y}, 1);
             const randomChoice = Math.floor(Math.random() * range.length);
             moveCharacter(range[randomChoice].x, range[randomChoice].y);
         }

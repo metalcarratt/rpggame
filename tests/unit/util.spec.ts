@@ -1,6 +1,6 @@
 import { units, unitsZero } from "@/units/units";
 import { updateMap } from "@/map";
-import { findFreeRangeAround, findFreeSpaceAround } from "@/util";
+import { findRangeAround, findFreeSpaceAround } from "@/util";
 import { mouseUnit } from "@/units/spiritUnit";
 
 const EMPTY_MAP = [
@@ -99,7 +99,7 @@ describe('findFreeRangeAround', () => {
         
         updateMap(BIG_MAP);
 
-        const spaces = findFreeRangeAround({x: 2, y: 2}, 1);
+        const spaces = findRangeAround({x: 2, y: 2}, 1);
 
         expect(spaces.length).toBe(8);
     });
@@ -108,7 +108,7 @@ describe('findFreeRangeAround', () => {
         
         updateMap(BIG_MAP);
 
-        const spaces = findFreeRangeAround({x: 2, y: 2}, 2);
+        const spaces = findRangeAround({x: 2, y: 2}, 2);
 
         expect(spaces.length).toBe(24);
     });
@@ -117,7 +117,7 @@ describe('findFreeRangeAround', () => {
         
         updateMap(MAZE_MAP);
 
-        const spaces = findFreeRangeAround({x: 0, y: 2}, 3);
+        const spaces = findRangeAround({x: 0, y: 2}, 3);
 
         expect(spaces.length).toBe(5);
         expect(spaces).toContainEqual({x: 0, y: 1});
@@ -131,7 +131,7 @@ describe('findFreeRangeAround', () => {
         
         updateMap(MAZE_MAP);
 
-        const spaces = findFreeRangeAround({x: 0, y: 2}, 4);
+        const spaces = findRangeAround({x: 0, y: 2}, 4);
 
         expect(spaces.length).toBe(6);
     });

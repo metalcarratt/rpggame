@@ -1,11 +1,45 @@
 import { map, xy } from "./map";
-import { units } from "./units/units";
+import { Team, units } from "./units/units";
 
-export function findFreeSpaceAround(around: xy): xy[] {
-    return findFreeSpaceAroundInternal(around, []);
+export enum SpaceCheckerFunction {
+    EMPTY_SPACE,
+    ENEMY_UNIT,
+    WALL
 }
 
-function findFreeSpaceAroundInternal(around: xy, existingSpaces: xy[]): xy[] {
+export const EMPTY_SPACE_CHECKER = (at: xy) => {
+    // console.log('in empty space checeer');
+        return map[at.y][at.x] === 0
+        && !(units.some(unit => unit.x === at.x && unit.y === at.y))};
+    
+export const ENEMY_UNIT_CHECKER = (at: xy) => {
+        // console.log('in enemy unit checker');
+        return map[at.y][at.x] === 0
+        && units.some(unit => unit.x === at.x && unit.y === at.y && unit.team === Team.MONSTER)};
+
+export const WALL_CHECKER = (at: xy) =>
+        map[at.y][at.x] !== 0
+        && !(units.some(unit => unit.x === at.x && unit.y === at.y));
+
+
+export function findFreeSpaceAround(around: xy, validateFn?: SpaceCheckerFunction): xy[] {
+    const _validateFn = validateFn ?? SpaceCheckerFunction.EMPTY_SPACE;
+    return findSpaceAroundInternal(around, [], _validateFn);
+}
+
+const doValidate = (at: xy, fn: SpaceCheckerFunction) => {
+    switch (fn) {
+        case SpaceCheckerFunction.EMPTY_SPACE:
+            return EMPTY_SPACE_CHECKER(at);
+        case SpaceCheckerFunction.ENEMY_UNIT:
+            return ENEMY_UNIT_CHECKER(at);
+        case SpaceCheckerFunction.WALL:
+            return WALL_CHECKER(at);
+    }
+}
+
+function findSpaceAroundInternal(around: xy, existingSpaces: xy[], validateFn: SpaceCheckerFunction): xy[] {
+    // console.log(`findSpaceAroundInternal, validate: ${validateFn}`);
     const spacesAround: xy[] = [];
 
     for (let iterx = around.x - 1; iterx < (around.x + 2); iterx++) {
@@ -15,8 +49,7 @@ function findFreeSpaceAroundInternal(around: xy, existingSpaces: xy[]): xy[] {
                 && iterx < map[0].length
                 && itery >= 0
                 && itery < map.length
-                && map[itery][iterx] === 0
-                && !(units.some(unit => unit.x === iterx && unit.y === itery))
+                && doValidate({ x: iterx, y: itery}, validateFn)
                 && !(spacesAround.some(move => move.x == iterx && move.y === itery))
                 && !(existingSpaces.some(move => move.x == iterx && move.y === itery))
             ) {
@@ -31,15 +64,20 @@ function findFreeSpaceAroundInternal(around: xy, existingSpaces: xy[]): xy[] {
     return spacesAround;
 }
 
-export function findFreeRangeAround(around: xy, range: number): xy[] {
+export function findRangeAround(around: xy, range: number, validateFn?: SpaceCheckerFunction): xy[] {
     // console.log(`findFreeRangeAround, around: ${JSON.stringify(around)}, range: ${range}}`);
-    let spacesAround = findFreeSpaceAround(around)
+    // console.log(`findFreeRangeAround, validate: ${validateFn}`);
+    const _validateFn = validateFn ?? SpaceCheckerFunction.EMPTY_SPACE;
+    // console.log(`validate function: ${_validateFn}`);
+    let spacesAround = findFreeSpaceAround(around, _validateFn);
+    
 
     for (let n = 0; n < range - 1; n++) {
         // console.log(`n=${n}`);
         const length = spacesAround.length;
         for (let iter = 0; iter < length; iter++) {
-            spacesAround = spacesAround.concat(findFreeSpaceAroundInternal(spacesAround[iter], spacesAround));
+            const spaces = findSpaceAroundInternal(spacesAround[iter], spacesAround, _validateFn);
+            spacesAround = spacesAround.concat(spaces);
         }
     }
 

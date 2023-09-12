@@ -1,5 +1,5 @@
 import { currentTurnUnit } from "./units/units";
-import { findFreeRangeAround } from "./util";
+import { findRangeAround } from "./util";
 
 export let moveTo: {x: number, y: number}[] = [];
 
@@ -13,6 +13,6 @@ export function clearMoveTo() {
 }
 
 export function findMoveTo() {
-    moveTo = findFreeRangeAround(currentTurnUnit(), currentTurnUnit().movement);
+    moveTo = findRangeAround(currentTurnUnit(), currentTurnUnit().movement);
 }
 

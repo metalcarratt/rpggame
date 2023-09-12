@@ -2,7 +2,9 @@ import { render } from "../canvas";
 import { xy } from "../map";
 import { clearMoveTo } from "../moving";
 import { currentTurnUnit, nextUnitTurn } from "../units/units";
-import { findFreeRangeAround } from "../util";
+import { SpaceCheckerFunction, findRangeAround } from "../util";
+
+
 
 export type Action = {
     label: string,
@@ -10,7 +12,8 @@ export type Action = {
     range?: number,
     meta?: any,
     perform: (at: xy) => void,
-    precondition: () => boolean
+    precondition: () => boolean,
+    rangeValidator?: SpaceCheckerFunction
 }
 
 export let actionAt: xy[] = [];
@@ -22,7 +25,8 @@ let clickedAction: Action | null = null;
 export const clickAction = (action: Action) => {
     clearMoveTo();
     if (action.range) {
-        actionAt = findFreeRangeAround(currentTurnUnit(), action.range);
+        console.log(`action.range, action=${JSON.stringify(action)}, rangeValidator=${JSON.stringify(action.rangeValidator)}`);
+        actionAt = findRangeAround(currentTurnUnit(), action.range, action.rangeValidator ?? SpaceCheckerFunction.EMPTY_SPACE);
         clickedAction = action;
         render();
     } else {

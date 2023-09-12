@@ -6,6 +6,8 @@ import { render } from "../canvas";
 import { playerUnit } from "./playerUnit";
 import { bossUnit } from "./spiderUnit";
 import { addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUnit } from "./turnStack";
+import { gameOver } from "@/gameStatus";
+import { xy } from "@/map";
 
 export enum Team {
     PLAYER,
@@ -55,7 +57,7 @@ export const player = () => units.find(unit => unit.name === 'player') as Unit;
 
 export const playerTeam = () => units.filter(unit => unit.team === Team.PLAYER);
 
-
+export const unitAt = (at: xy): Unit => units.find(unit => unit.x === at.x && unit.y == at.y) as Unit;
 
 export const currentTurnUnit = () => currentStackUnit();
 
@@ -79,17 +81,24 @@ export function nextUnitTurn(): void {
 }
 
 export function attackUnit(attacker: Unit, attackee: Unit) {
+    console.log(`attack - ${attacker.name} vs ${attackee.name}`);
     if (attackee.armour >= attacker.power) {
         attackee.armour -= attacker.power;
+        console.log(`attackee armour reduced to ${attackee.armour}`);
 
     } else {
         const remainingPower = attacker.power - attackee.armour;
         attackee.armour = 0;
         attackee.hp -= remainingPower;
+        console.log(`attackee health reduced to ${attackee.hp}`);
     }
 
     if (attackee.hp < 0) {
         // DEAD
         attackee.hp = 0;
+        console.log(`attackee dead`);
+        if (attackee.name === 'player') {
+            gameOver();
+        }
     }
 }

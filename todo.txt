@@ -2,8 +2,6 @@
 
 TODO:
 - fighting:
-  - fight action
-  - death
   - gradual movement
 - traps:
   - lay stumble trap action

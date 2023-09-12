@@ -2,7 +2,7 @@ import { xy } from "@/map";
 import { Team, Unit } from "./units";
 import { images } from "@/imageLoader";
 import { RECALL_SPIRIT_FRIEND_ACTION, SUMMON_SPIRIT_FRIEND_ACTION } from "@/actions/spiritFriend";
-import { WAIT_ACTION } from "@/actions/commonActions";
+import { ATTACK_ACTION, WAIT_ACTION } from "@/actions/commonActions";
 
 export const playerUnit = (at: xy): Unit => ({
     name: 'player',
@@ -18,6 +18,7 @@ export const playerUnit = (at: xy): Unit => ({
     actions: [
         SUMMON_SPIRIT_FRIEND_ACTION,
         RECALL_SPIRIT_FRIEND_ACTION,
+        ATTACK_ACTION,
         WAIT_ACTION
     ]
 });
