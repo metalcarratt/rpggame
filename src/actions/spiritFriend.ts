@@ -2,6 +2,8 @@ import { xy } from "@/map";
 import { addUnit, currentTurnUnit, removeUnit } from "@/units/units";
 import { Action } from "./actions";
 import { mouseUnit } from "@/units/spiritUnit";
+import { SpaceCheckerFunction } from "@/util";
+import { ATTACK_HOVER_COLOUR } from "@/constants";
 
 const SUMMON_LABEL = 'Spirit Friend';
 const DEPLOYED_ATTRIBUTE = 'deployed';
@@ -9,7 +11,11 @@ const DEPLOYED_ATTRIBUTE = 'deployed';
 export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
     label: SUMMON_LABEL,
     img: 'mouse_summon.png',
-    range: 1,
+    range: {
+        range: 1,
+        validator: SpaceCheckerFunction.EMPTY_SPACE,
+        colour: ATTACK_HOVER_COLOUR
+    },
     meta: {
         [DEPLOYED_ATTRIBUTE]: false
     },

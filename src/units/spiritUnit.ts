@@ -1,7 +1,7 @@
 import { xy } from "@/map";
 import { Team, Unit } from "./units";
 import { images } from "@/imageLoader";
-import { WAIT_ACTION } from "@/actions/commonActions";
+import { WAIT_ACTION, WALK_ACTION } from "@/actions/commonActions";
 
 export const mouseUnit = (at: xy): Unit => ({
     name: 'mouse',
@@ -15,6 +15,8 @@ export const mouseUnit = (at: xy): Unit => ({
     team: Team.PLAYER,
     movement: 4,
     actions: [
-        WAIT_ACTION
+        WAIT_ACTION,
+        WALK_ACTION
+
     ]
 });

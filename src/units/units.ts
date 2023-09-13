@@ -1,5 +1,5 @@
 import { imgData } from "../imageLoader";
-import { Action } from "../actions/actions";
+import { Action, clickAction } from "../actions/actions";
 import { findMoveTo } from "../moving";
 import { findPlayerVisible } from "../visibility";
 import { render } from "../canvas";
@@ -8,6 +8,7 @@ import { bossUnit } from "./spiderUnit";
 import { addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUnit } from "./turnStack";
 import { gameOver } from "@/gameStatus";
 import { xy } from "@/map";
+import { WALK_ACTION } from "@/actions/commonActions";
 
 export enum Team {
     PLAYER,
@@ -74,10 +75,15 @@ export function nextUnitTurn(): void {
         
     } else {
         console.log(`player move`);
-        findMoveTo();
-        findPlayerVisible();
-        render();
+        // findMoveTo();
+        startPlayerTurn();
     }
+}
+
+export function startPlayerTurn() {
+    findPlayerVisible();
+    clickAction(WALK_ACTION);
+    render();
 }
 
 export function attackUnit(attacker: Unit, attackee: Unit) {

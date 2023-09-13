@@ -40,10 +40,11 @@ const mouseOverActionAt = () =>
 
 export function clickCanvas() {
     console.log('click');
-    if (mouseOverMoveTo()) {
-        moveCharacter(mouseAt.x + offset.x, mouseAt.y + offset.y);
-        nextUnitTurn();
-    } else if (mouseOverActionAt()) {
+    // if (mouseOverMoveTo()) {
+    //     moveCharacter(mouseAt.x + offset.x, mouseAt.y + offset.y);
+    //     nextUnitTurn();
+    // } else 
+    if (mouseOverActionAt()) {
         performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y});
         nextUnitTurn();
     }

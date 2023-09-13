@@ -27,8 +27,7 @@ import GameOver from './components/GameOver.vue';
 import { onMounted } from 'vue';
 import { initCanvas, shiftDown, shiftLeft, shiftRight, shiftUp } from './canvas';
 import { initImages } from './imageLoader';
-import { initCharacter } from './map';
-import { initUnits } from './units/units';
+import { initUnits, startPlayerTurn } from './units/units';
 import { clickCanvas, mouseHover } from './mouseHandler';
 
 const canvasClass = () => mouseHover.value === true ? 'mouseHover' : '';
@@ -36,7 +35,8 @@ const canvasClass = () => mouseHover.value === true ? 'mouseHover' : '';
 onMounted(() => {
     initImages();
     initUnits();
-    initCharacter();
+    // initCharacter();
+    startPlayerTurn();
     initCanvas();
 });
 

@@ -1,12 +1,12 @@
 <template>
-    <span class="action" @click="() => clickAction(props.action)">
+    <span :class="classes()" @click="() => clickAction(props.action)">
         <img :src="props.action.img"/>
     </span>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
-import { Action, clickAction } from '../actions/actions';
+import { isCurrentAction, Action, clickAction } from '../actions/actions';
 
 const props = defineProps({
     action: {
@@ -14,6 +14,8 @@ const props = defineProps({
         required: true
     }
 });
+
+const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''];
 </script>
 
 <style scoped>
@@ -29,6 +31,10 @@ const props = defineProps({
 
     background-color: #fcf5bf;
     pointer-events: auto;
+}
+
+.action.selected {
+    border: solid 5px yellow;
 }
 
 .action:hover {

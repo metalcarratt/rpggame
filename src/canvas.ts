@@ -3,8 +3,9 @@ import { images } from "./imageLoader";
 import { visible } from "./visibility";
 import { Unit, currentTurnUnit, units } from "./units/units";
 import { moveTo } from './moving';
-import { actionAt } from "./actions/actions";
+import { actionAt, currentActionColour } from "./actions/actions";
 import { mouseAt, mouseMoveListener } from "./mouseHandler";
+import { CURRENT_UNIT_COLOUR, MOVEMENT_HOVER_COLOUR } from "./constants";
 
 export let dpi = 0;
 export const CELL_SIZE = 100;
@@ -107,7 +108,7 @@ function drawCells(ctx: CanvasRenderingContext2D) {
 }
 
 function drawCurrentUnitBg(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = 'rgba(255, 207, 71, 0.3)';
+    ctx.fillStyle = CURRENT_UNIT_COLOUR;
     ctx.fillRect(
         (currentTurnUnit().x - offset.x) * CELL_SIZE,
         (currentTurnUnit().y - offset.y) * CELL_SIZE,
@@ -133,7 +134,7 @@ function drawCursor(ctx: CanvasRenderingContext2D) {
 
 function drawMoveToBg(ctx: CanvasRenderingContext2D, at: xy) {
     if (moveTo.some(loc => loc.x === at.x && loc.y === at.y)) {
-        ctx.fillStyle = 'rgba(255, 98, 164, 0.3)';
+        ctx.fillStyle = MOVEMENT_HOVER_COLOUR;
         ctx.fillRect(
             (at.x - offset.x) * CELL_SIZE,
             (at.y - offset.y) * CELL_SIZE,
@@ -145,7 +146,7 @@ function drawMoveToBg(ctx: CanvasRenderingContext2D, at: xy) {
 
 function drawActionAtBg(ctx: CanvasRenderingContext2D, at: xy) {
     if (actionAt.some(loc => loc.x === at.x && loc.y === at.y)) {
-        ctx.fillStyle = 'rgba(143, 50, 168, 0.3)';
+        ctx.fillStyle = currentActionColour();
         ctx.fillRect(
             (at.x - offset.x) * CELL_SIZE,
             (at.y - offset.y) * CELL_SIZE,

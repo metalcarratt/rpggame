@@ -1,3 +1,4 @@
+import { initAction } from "./actions/actions";
 import { findMoveTo } from "./moving";
 import { findPlayerVisible } from "./visibility";
 
@@ -21,7 +22,8 @@ export type xy = {
 
 export function initCharacter() {
     // console.log('init character');
-    findMoveTo();
+    // findMoveTo();
+    initAction();
     findPlayerVisible();
 }
 
