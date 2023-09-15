@@ -34,8 +34,10 @@ export function initCanvas() {
 }
 
 function drawImage(img: HTMLImageElement, at: xy) {
+    // console.log(`visible: ${JSON.stringify(visible)}`);
+    // console.log(`at: ${JSON.stringify(at)}`);
     if (visible[at.y][at.x]) {
-        // console.log('visible');
+        
         const canvas = getCanvas();
         const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 

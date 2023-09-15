@@ -9,14 +9,18 @@ export function findPlayerVisible() {
 
 export function findVisibleTo(units: Unit[]): boolean[][] {
     const _visible: boolean[][] = [];
+    
     for (let y = 0; y < map.length; y++) {
         _visible[y] =[];
         for (let x = 0; x < map[0].length; x++) {
             _visible[y][x] = false;
         }
     }
+    
 
     for (const unit of units) {
+    //     console.log(`_visible: ${JSON.stringify(_visible)}`);
+    // console.log(`x: ${unit.x}. y: ${unit.y}`)
         followRight(unit, _visible);
         followLeft(unit, _visible);
         followUp(unit, _visible);

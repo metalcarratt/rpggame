@@ -7,7 +7,9 @@ import { ATTACK_HOVER_COLOUR, MOVEMENT_HOVER_COLOUR } from "@/constants";
 export const WAIT_ACTION: Action = {
     label: 'Wait',
     img: '/waiting.png',
-    perform: () => {},
+    perform: () => {
+        currentTurnUnit().energy = 0;
+    },
     precondition: () => true
 }
 

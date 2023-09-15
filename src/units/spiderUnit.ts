@@ -19,31 +19,40 @@ export const bossUnit = (at: xy): Unit => ({
     energy: 8,
     actions: [],
     mobMove() {
-        const visible = findVisibleTo([this]);
-        // console.log(`visible: ${JSON.stringify(visible)}`);
-        const playerUnit = player();
-        if (visible[playerUnit.y][playerUnit.x]) {
-            // console.log('can see player');
+        while (this.energy > 0) {
+            const visible = findVisibleTo([this]);
+            // console.log(`visible: ${JSON.stringify(visible)}`);
+            const playerUnit = player();
+            if (visible[playerUnit.y][playerUnit.x]) {
+                // console.log('can see player');
 
-            if (isNextTo(this, playerUnit)) {
-                // attack
-                // console.log('ATTACK!!');
-                attackUnit(this, playerUnit);
+                if (isNextTo(this, playerUnit)) {
+                    // attack
+                    // console.log('ATTACK!!');
+                    attackUnit(this, playerUnit);
+                    this.energy = 0;
 
+                } else {
+                    // charge
+                    const range = findRangeAround({x: this.x, y: this.y}, 1);
+                    const closest = findSpaceClosestTo(visible, range, playerUnit, this);
+                    if (closest.x === -1 || closest.y === -1) {
+                        this.energy = 0;
+                        return;
+                    }
+                    moveCharacter(closest.x, closest.y);
+                    this.energy--;
+                    
+                }
             } else {
-                // charge
-                const range = findRangeAround({x: this.x, y: this.y}, 8);
-                const closest = findSpaceClosestTo(visible, range, playerUnit, this);
-                moveCharacter(closest.x, closest.y);
+                // console.log('can\'t see player');
+                // idle
+                const range = findRangeAround({x: this.x, y: this.y}, 1);
+                const randomChoice = Math.floor(Math.random() * range.length);
+                moveCharacter(range[randomChoice].x, range[randomChoice].y);
+                this.energy = 0;
             }
-        } else {
-            // console.log('can\'t see player');
-            // idle
-            const range = findRangeAround({x: this.x, y: this.y}, 1);
-            const randomChoice = Math.floor(Math.random() * range.length);
-            moveCharacter(range[randomChoice].x, range[randomChoice].y);
-        }
 
-        
+        }
     }
 });
