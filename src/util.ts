@@ -1,6 +1,12 @@
 import { map, xy } from "./map";
 import { Team, units } from "./units/units";
 
+export type xyd = {
+    x: number,
+    y: number,
+    d: number
+}
+
 export enum SpaceCheckerFunction {
     EMPTY_SPACE,
     ENEMY_UNIT,
@@ -64,12 +70,13 @@ function findSpaceAroundInternal(around: xy, existingSpaces: xy[], validateFn: S
     return spacesAround;
 }
 
-export function findRangeAround(around: xy, range: number, validateFn?: SpaceCheckerFunction): xy[] {
+export function findRangeAround(around: xy, range: number, validateFn?: SpaceCheckerFunction): xyd[] {
     // console.log(`findFreeRangeAround, around: ${JSON.stringify(around)}, range: ${range}}`);
     // console.log(`findFreeRangeAround, validate: ${validateFn}`);
     const _validateFn = validateFn ?? SpaceCheckerFunction.EMPTY_SPACE;
     // console.log(`validate function: ${_validateFn}`);
-    let spacesAround = findFreeSpaceAround(around, _validateFn);
+    const spaces1 = findFreeSpaceAround(around, _validateFn);
+    let spacesAround: xyd[] = spaces1.map(space => ({...space, d: 1}));
     
 
     for (let n = 0; n < range - 1; n++) {
@@ -77,7 +84,7 @@ export function findRangeAround(around: xy, range: number, validateFn?: SpaceChe
         const length = spacesAround.length;
         for (let iter = 0; iter < length; iter++) {
             const spaces = findSpaceAroundInternal(spacesAround[iter], spacesAround, _validateFn);
-            spacesAround = spacesAround.concat(spaces);
+            spacesAround = spacesAround.concat(spaces.map(space => ({...space, d: n + 2})));
         }
     }
 

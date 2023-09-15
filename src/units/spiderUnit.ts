@@ -16,17 +16,18 @@ export const bossUnit = (at: xy): Unit => ({
     power: 10,
     team: Team.MONSTER,
     movement: 8,
+    energy: 8,
     actions: [],
     mobMove() {
         const visible = findVisibleTo([this]);
         // console.log(`visible: ${JSON.stringify(visible)}`);
         const playerUnit = player();
         if (visible[playerUnit.y][playerUnit.x]) {
-            console.log('can see player');
+            // console.log('can see player');
 
             if (isNextTo(this, playerUnit)) {
                 // attack
-                console.log('ATTACK!!');
+                // console.log('ATTACK!!');
                 attackUnit(this, playerUnit);
 
             } else {
@@ -36,7 +37,7 @@ export const bossUnit = (at: xy): Unit => ({
                 moveCharacter(closest.x, closest.y);
             }
         } else {
-            console.log('can\'t see player');
+            // console.log('can\'t see player');
             // idle
             const range = findRangeAround({x: this.x, y: this.y}, 1);
             const randomChoice = Math.floor(Math.random() * range.length);

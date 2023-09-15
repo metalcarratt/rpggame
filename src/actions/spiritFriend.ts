@@ -22,6 +22,7 @@ export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
     perform(at: xy) {
         addUnit(mouseUnit(at));
         this.meta[DEPLOYED_ATTRIBUTE] = true;
+        currentTurnUnit().energy = 0;
     },
     precondition() {
         return this.meta[DEPLOYED_ATTRIBUTE] === false;
@@ -38,6 +39,7 @@ export const RECALL_SPIRIT_FRIEND_ACTION: Action = {
         if (actions) {
             actions.meta[DEPLOYED_ATTRIBUTE] = false;
         }
+        currentTurnUnit().energy = 0;
     },
     precondition() {
         return currentTurnUnit().actions.find(action => action.label === SUMMON_LABEL)?.meta[DEPLOYED_ATTRIBUTE] === true;

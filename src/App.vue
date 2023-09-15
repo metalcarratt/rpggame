@@ -81,4 +81,9 @@ html, body, #app {
 button {
     font-size: 40px;
 }
+
+#app {
+    display: flex;
+    justify-content: center;
+}
 </style>

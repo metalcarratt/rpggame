@@ -1,9 +1,9 @@
 import { ref } from "vue";
 import { moveCharacter, moveTo } from './moving';
-import { actionAt, performAction } from "./actions/actions";
+import { actionAt, getActionAt, performAction } from "./actions/actions";
 import { xy } from "./map";
 import { CELL_SIZE, dpi, getCanvas, offset, render } from "./canvas";
-import { nextUnitTurn } from "./units/units";
+import { currentTurnUnit, nextUnitTurn } from "./units/units";
 
 export const mouseHover = ref(false);
 export const mouseAt: { x: number, y: number } = { x: -1, y: -1 };
@@ -45,7 +45,11 @@ export function clickCanvas() {
     //     nextUnitTurn();
     // } else 
     if (mouseOverActionAt()) {
-        performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y});
-        nextUnitTurn();
+        const actionAt = getActionAt(mouseAt.x, mouseAt.y);
+        performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y, d: actionAt.d});
+        console.log(`unit has ${currentTurnUnit().energy} remaining`);
+        if (currentTurnUnit().energy < 1) {
+            nextUnitTurn();
+        }
     }
 }

@@ -15,6 +15,7 @@ export const playerUnit = (at: xy): Unit => ({
     power: 2,
     team: Team.PLAYER,
     movement: 2,
+    energy: 2,
     actions: [
         SUMMON_SPIRIT_FRIEND_ACTION,
         RECALL_SPIRIT_FRIEND_ACTION,

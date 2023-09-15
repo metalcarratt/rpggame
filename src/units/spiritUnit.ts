@@ -14,6 +14,7 @@ export const mouseUnit = (at: xy): Unit => ({
     power: 0,
     team: Team.PLAYER,
     movement: 4,
+    energy: 4,
     actions: [
         WAIT_ACTION,
         WALK_ACTION

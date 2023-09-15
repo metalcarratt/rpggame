@@ -23,6 +23,7 @@ export type Unit = {
     y: number,
     team: Team,
     movement: number,
+    energy: number,
     hp: number,
     armour: number,
     qi: number,
@@ -66,15 +67,17 @@ export function nextUnitTurn(): void {
     nextStackUnit();
 
     const currentUnit = currentTurnUnit();
-    console.log(`current unit turn: ${currentUnit.name}`);
+    currentUnit.energy = currentUnit.movement;
+    console.log(`current unit energy: ${currentUnit.energy}`);
+    // console.log(`current unit turn: ${currentUnit.name}`);
 
     if (currentUnit.mobMove) {
-        console.log(`mob move`);
+        // console.log(`mob move`);
         currentUnit.mobMove();
         nextUnitTurn();
         
     } else {
-        console.log(`player move`);
+        // console.log(`player move`);
         // findMoveTo();
         startPlayerTurn();
     }
@@ -87,22 +90,22 @@ export function startPlayerTurn() {
 }
 
 export function attackUnit(attacker: Unit, attackee: Unit) {
-    console.log(`attack - ${attacker.name} vs ${attackee.name}`);
+    // console.log(`attack - ${attacker.name} vs ${attackee.name}`);
     if (attackee.armour >= attacker.power) {
         attackee.armour -= attacker.power;
-        console.log(`attackee armour reduced to ${attackee.armour}`);
+        // console.log(`attackee armour reduced to ${attackee.armour}`);
 
     } else {
         const remainingPower = attacker.power - attackee.armour;
         attackee.armour = 0;
         attackee.hp -= remainingPower;
-        console.log(`attackee health reduced to ${attackee.hp}`);
+        // console.log(`attackee health reduced to ${attackee.hp}`);
     }
 
     if (attackee.hp < 0) {
         // DEAD
         attackee.hp = 0;
-        console.log(`attackee dead`);
+        // console.log(`attackee dead`);
         if (attackee.name === 'player') {
             gameOver();
         }
