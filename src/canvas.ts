@@ -6,6 +6,8 @@ import { moveTo } from './moving';
 import { actionAt, currentActionColour } from "./actions/actions";
 import { mouseAt, mouseMoveListener } from "./mouseHandler";
 import { CURRENT_UNIT_COLOUR, MOVEMENT_HOVER_COLOUR } from "./constants";
+import { PlacedItem, items } from "./items/items";
+import { Effect, EffectType, effects } from "./effects/effects";
 
 export let dpi = 0;
 export const CELL_SIZE = 100;
@@ -31,6 +33,25 @@ export function initCanvas() {
     setCanvasForDpi();
 
     canvas.addEventListener('mousemove', mouseMoveListener);
+
+    setInterval(animations, 200);
+}
+
+let phase = 1;
+const animations = () => {
+    // console.log(`animate ${phase}`);
+    phase++;
+    if (phase > 4) {
+        phase = 1;
+    }
+
+    const canvas = getCanvas();
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+        for (const effect of effects) {
+            drawCell(ctx, effect.at);
+        }
+    }
 }
 
 function drawImage(img: HTMLImageElement, at: xy) {
@@ -84,9 +105,11 @@ export const render = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawCells(ctx);
-        drawCurrentUnitBg(ctx);
-        drawUnits();
-        drawCursor(ctx);
+        // drawCurrentUnitBg(ctx);
+        // drawItems();
+        // drawUnits();
+        // drawEffects();
+        // drawCursor(ctx);
     }
 };
 
@@ -94,44 +117,100 @@ function drawCells(ctx: CanvasRenderingContext2D) {
     // console.log('draw cells');
     for (let y = 0 + offset.y; y < map.length; y++) {
         for (let x = 0 + offset.x; x < map[0].length; x++) {
-            // console.log(`drawing ${x}, ${y}`);
-            if (map[y][x] === 0) {
-                // console.log('floor');
-                drawImage(images.floor.img as HTMLImageElement, {x, y});
-            } else if (map[y][x] === 1) {
-                // console.log('cave');
-                drawImage(images.cave.img as HTMLImageElement, {x, y});
-            }
-
-            drawMoveToBg(ctx, {x, y});
-            drawActionAtBg(ctx, {x, y});
+            drawCell(ctx, {x, y});
         }
     }
 }
 
-function drawCurrentUnitBg(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = CURRENT_UNIT_COLOUR;
-    ctx.fillRect(
-        (currentTurnUnit().x - offset.x) * CELL_SIZE,
-        (currentTurnUnit().y - offset.y) * CELL_SIZE,
-        CELL_SIZE,
-        CELL_SIZE
-    );
+function drawCell(ctx: CanvasRenderingContext2D, at: xy) {
+    // console.log(`drawing ${x}, ${y}`);
+    if (map[at.y][at.x] === 0) {
+        // console.log('floor');
+        drawImage(images.floor.img as HTMLImageElement, at);
+    } else if (map[at.y][at.x] === 1) {
+        // console.log('cave');
+        drawImage(images.cave.img as HTMLImageElement, at);
+    }
+
+    drawMoveToBg(ctx, at);
+    drawActionAtBg(ctx, at);
+
+    drawCurrentUnitBg(ctx, at);
+    drawItems(at);
+    drawUnits(at);
+    drawEffects(at);
+    drawCursor(ctx, at);
 }
 
-function drawUnits() {
-    for (const unit of units) {
-        drawUnit(unit);
+function drawCurrentUnitBg(ctx: CanvasRenderingContext2D, at: xy) {
+    if (currentTurnUnit().x === at.x && currentTurnUnit().y === at.y) {
+        ctx.fillStyle = CURRENT_UNIT_COLOUR;
+        ctx.fillRect(
+            (currentTurnUnit().x - offset.x) * CELL_SIZE,
+            (currentTurnUnit().y - offset.y) * CELL_SIZE,
+            CELL_SIZE,
+            CELL_SIZE
+        );
     }
 }
 
-function drawCursor(ctx: CanvasRenderingContext2D) {
-    // console.log(`Drawing cursor at ${mouseAt.value.x}, ${mouseAt.value.y}`);
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "orange";
-    ctx.beginPath();
-    ctx.rect(mouseAt.x * CELL_SIZE, mouseAt.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-    ctx.stroke();
+function drawUnits(at: xy) {
+    const unit = units.find(unit => unit.x === at.x && unit.y === at.y);
+    // for (const unit of units) {
+    if (unit) {
+        drawUnit(unit);
+    }
+    // }
+}
+
+function drawItem(item: PlacedItem) {
+    drawImage(item.type.img.img as HTMLImageElement, item.at);
+}
+
+function drawItems(at: xy) {
+    const item = items().find(item => item.at.x === at.x && item.at.y === at.y);
+    // for (const item of items()) {
+    if (item) {
+        drawItem(item);
+    }
+    // }
+}
+
+function drawEffect(effect: Effect) {
+    // console.log(`draw effect`);
+    if (effect.type === EffectType.LIGHTNING) {
+        switch (phase) {
+            case 1:
+                return drawImage(images.lightning1.img as HTMLImageElement, effect.at);
+            case 2:
+                return drawImage(images.lightning2.img as HTMLImageElement, effect.at);
+            case 3:
+                return drawImage(images.lightning3.img as HTMLImageElement, effect.at);
+            case 4:
+                return drawImage(images.lightning4.img as HTMLImageElement, effect.at);
+        }
+        
+    }
+}
+
+function drawEffects(at: xy) {
+    const effect = effects.find(effect => effect.at.x === at.x && effect.at.y === at.y);
+    // for (const effect of effects) {
+    if (effect) {
+        drawEffect(effect);
+    }
+    // }
+}
+
+function drawCursor(ctx: CanvasRenderingContext2D, at: xy) {
+    if (mouseAt.x === at.x && mouseAt.y === at.y) {
+        // console.log(`Drawing cursor at ${mouseAt.value.x}, ${mouseAt.value.y}`);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "orange";
+        ctx.beginPath();
+        ctx.rect(mouseAt.x * CELL_SIZE, mouseAt.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        ctx.stroke();
+    }
 }
 
 function drawMoveToBg(ctx: CanvasRenderingContext2D, at: xy) {

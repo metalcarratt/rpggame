@@ -6,7 +6,7 @@
 
 <script setup>
 import { defineProps } from 'vue';
-import { isCurrentAction, Action, clickAction } from '../actions/actions';
+import { isCurrentAction, Action, clickAction } from './actions';
 
 const props = defineProps({
     action: {
@@ -31,6 +31,8 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
 
     background-color: #fcf5bf;
     pointer-events: auto;
+
+    border: solid 5px white;
 }
 
 .action.selected {
@@ -39,7 +41,7 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
 
 .action:hover {
     cursor: pointer;
-    box-shadow: 0px 0px 5px blue;
+    box-shadow: 0px 0px 20px white;
 }
 
 .action img {

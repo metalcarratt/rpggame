@@ -21,7 +21,14 @@ export const images = {
     cave: initImg(),
     character: initImg(),
     spider: initImg(),
-    mouse: initImg()
+    mouse: initImg(),
+    lightningFlag: initImg(),
+    formationPlate: initImg(),
+    animalCorpse: initImg(),
+    lightning1: initImg(),
+    lightning2: initImg(),
+    lightning3: initImg(),
+    lightning4: initImg(),
 }
 
 const checkLoaded = () => {
@@ -45,5 +52,12 @@ export function initImages() {
     loadImg(images.character, '../chara.png');
     loadImg(images.spider, '../spider.png');
     loadImg(images.mouse, '../mouse.png');
+    loadImg(images.lightningFlag, '../lightning_flag.png');
+    loadImg(images.formationPlate, '../formation_plate.png');
+    loadImg(images.animalCorpse, '../animal.png');
+    loadImg(images.lightning1, '../effect_lightning_1.png');
+    loadImg(images.lightning2, '../effect_lightning_2.png');
+    loadImg(images.lightning3, '../effect_lightning_3.png');
+    loadImg(images.lightning4, '../effect_lightning_4.png');
     checkLoaded();
 }

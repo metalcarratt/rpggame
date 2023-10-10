@@ -6,6 +6,7 @@ import { currentTurnUnit, nextUnitTurn } from "../units/units";
 import { SpaceCheckerFunction, findRangeAround, xyd } from "../util";
 import { WALK_ACTION } from "./commonActions";
 import { findPlayerVisible } from "@/visibility";
+import { startModal } from "./modal";
 
 export type ActionRange = {
     range: number | (() => number),

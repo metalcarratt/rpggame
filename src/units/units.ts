@@ -1,6 +1,5 @@
 import { imgData } from "../imageLoader";
 import { Action, clickAction } from "../actions/actions";
-import { findMoveTo } from "../moving";
 import { findPlayerVisible } from "../visibility";
 import { render } from "../canvas";
 import { playerUnit } from "./playerUnit";
@@ -9,6 +8,7 @@ import { addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUn
 import { gameOver } from "@/gameStatus";
 import { xy } from "@/map";
 import { WALK_ACTION } from "@/actions/commonActions";
+import { Inventory } from "@/items/inventory/inventory";
 
 export enum Team {
     PLAYER,
@@ -28,6 +28,7 @@ export type Unit = {
     armour: number,
     qi: number,
     power: number,
+    inventory?: Inventory,
     actions: Action[],
     mobMove?: () => void
 }

@@ -1,3 +1,4 @@
+import { items } from "./items/items";
 import { map, xy } from "./map";
 import { Team, units } from "./units/units";
 
@@ -10,7 +11,8 @@ export type xyd = {
 export enum SpaceCheckerFunction {
     EMPTY_SPACE,
     ENEMY_UNIT,
-    WALL
+    WALL,
+    ITEM
 }
 
 export const EMPTY_SPACE_CHECKER = (at: xy) => {
@@ -27,6 +29,9 @@ export const WALL_CHECKER = (at: xy) =>
         map[at.y][at.x] !== 0
         && !(units.some(unit => unit.x === at.x && unit.y === at.y));
 
+export const ITEM_CHECKER = (at: xy) => 
+        items().some(item => item.at.x === at.x && item.at.y === at.y);
+
 
 export function findFreeSpaceAround(around: xy, validateFn?: SpaceCheckerFunction): xy[] {
     const _validateFn = validateFn ?? SpaceCheckerFunction.EMPTY_SPACE;
@@ -41,6 +46,8 @@ const doValidate = (at: xy, fn: SpaceCheckerFunction) => {
             return ENEMY_UNIT_CHECKER(at);
         case SpaceCheckerFunction.WALL:
             return WALL_CHECKER(at);
+        case SpaceCheckerFunction.ITEM:
+            return ITEM_CHECKER(at);
     }
 }
 

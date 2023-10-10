@@ -12,6 +12,7 @@
         <TurnStack></TurnStack>
         <ActionButtons></ActionButtons>
     </GameHud>
+    <ActionModal />
     <!-- <button @click="shiftLeft">←</button>
     <button @click="shiftUp">↑</button>
     <button @click="shiftRight">→</button>
@@ -22,13 +23,16 @@
 <script setup>
 import GameHud from './components/GameHud.vue';
 import TurnStack from './components/TurnStack.vue';
-import ActionButtons from './components/ActionButtons.vue';
+import ActionButtons from './actions/ActionButtons.vue';
 import GameOver from './components/GameOver.vue';
+import ActionModal from './actions/ActionModal.vue';
 import { onMounted } from 'vue';
 import { initCanvas, shiftDown, shiftLeft, shiftRight, shiftUp } from './canvas';
 import { initImages } from './imageLoader';
 import { initUnits, startPlayerTurn } from './units/units';
 import { clickCanvas, mouseHover } from './mouseHandler';
+import { placeItem } from "./items/items";
+import { SPIDER_BAIT } from "./items/randomItems";
 
 const canvasClass = () => mouseHover.value === true ? 'mouseHover' : '';
 
@@ -36,6 +40,8 @@ onMounted(() => {
     initImages();
     initUnits();
     // initCharacter();
+    placeItem(SPIDER_BAIT, {x: 1, y: 1});
+    placeItem(SPIDER_BAIT, {x: 3, y: 1});
     startPlayerTurn();
     initCanvas();
 });
@@ -65,6 +71,10 @@ html, body, #app {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+}
+
+#app {
+    background-color: #1a1919;
 }
 
 #myCanvas {
