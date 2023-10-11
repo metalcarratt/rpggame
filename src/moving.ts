@@ -4,8 +4,8 @@ import { findRangeAround } from "./util";
 export let moveTo: {x: number, y: number}[] = [];
 
 export function moveCharacter(x: number, y: number) {
-    currentTurnUnit().x = x;
-    currentTurnUnit().y = y;
+    currentTurnUnit().at.x = x;
+    currentTurnUnit().at.y = y;
 }
 
 export function clearMoveTo() {
@@ -13,6 +13,6 @@ export function clearMoveTo() {
 }
 
 export function findMoveTo() {
-    moveTo = findRangeAround(currentTurnUnit(), currentTurnUnit().movement);
+    moveTo = findRangeAround(currentTurnUnit().at, currentTurnUnit().movement);
 }
 

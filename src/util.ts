@@ -18,16 +18,16 @@ export enum SpaceCheckerFunction {
 export const EMPTY_SPACE_CHECKER = (at: xy) => {
     // console.log('in empty space checeer');
         return map[at.y][at.x] === 0
-        && !(units.some(unit => unit.x === at.x && unit.y === at.y))};
+        && !(units.some(unit => eqXy(unit.at, at)))};
     
 export const ENEMY_UNIT_CHECKER = (at: xy) => {
         // console.log('in enemy unit checker');
         return map[at.y][at.x] === 0
-        && units.some(unit => unit.x === at.x && unit.y === at.y && unit.team === Team.MONSTER)};
+        && units.some(unit => eqXy(unit.at, at) && unit.team === Team.MONSTER)};
 
 export const WALL_CHECKER = (at: xy) =>
         map[at.y][at.x] !== 0
-        && !(units.some(unit => unit.x === at.x && unit.y === at.y));
+        && !(units.some(unit => eqXy(unit.at, at)));
 
 export const ITEM_CHECKER = (at: xy) => 
         items().some(item => item.at.x === at.x && item.at.y === at.y);
@@ -123,3 +123,5 @@ export function findSpaceClosestTo(spaces: boolean[][], moves: xy[], target: xy,
 
     return closestLocation;
 }
+
+export const eqXy = (at1: xy, at2: xy) => at1.x === at2.x && at1.y === at2.y;

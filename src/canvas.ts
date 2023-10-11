@@ -8,6 +8,7 @@ import { mouseAt, mouseMoveListener } from "./mouseHandler";
 import { CURRENT_UNIT_COLOUR, MOVEMENT_HOVER_COLOUR } from "./constants";
 import { PlacedItem, items } from "./items/items";
 import { Effect, EffectType, effects } from "./effects/effects";
+import { eqXy } from "./util";
 
 export let dpi = 0;
 export const CELL_SIZE = 100;
@@ -76,13 +77,13 @@ function drawImage(img: HTMLImageElement, at: xy) {
 }
 
 function drawUnit(unit: Unit) {
-    drawImage(unit.img.img as HTMLImageElement, unit);
+    drawImage(unit.img.img as HTMLImageElement, unit.at);
 
-    if (visible[unit.y][unit.x]) {
+    if (visible[unit.at.y][unit.at.x]) {
         const canvas = getCanvas();
         const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        const x = (unit.x - offset.x) * CELL_SIZE;
-        const y = (unit.y - offset.y) * CELL_SIZE;
+        const x = (unit.at.x - offset.x) * CELL_SIZE;
+        const y = (unit.at.y - offset.y) * CELL_SIZE;
         ctx.font = "25px Arial";
 
         ctx.fillStyle = "white";
@@ -143,11 +144,11 @@ function drawCell(ctx: CanvasRenderingContext2D, at: xy) {
 }
 
 function drawCurrentUnitBg(ctx: CanvasRenderingContext2D, at: xy) {
-    if (currentTurnUnit().x === at.x && currentTurnUnit().y === at.y) {
+    if (eqXy(currentTurnUnit().at, at)) {
         ctx.fillStyle = CURRENT_UNIT_COLOUR;
         ctx.fillRect(
-            (currentTurnUnit().x - offset.x) * CELL_SIZE,
-            (currentTurnUnit().y - offset.y) * CELL_SIZE,
+            (currentTurnUnit().at.x - offset.x) * CELL_SIZE,
+            (currentTurnUnit().at.y - offset.y) * CELL_SIZE,
             CELL_SIZE,
             CELL_SIZE
         );
@@ -155,7 +156,7 @@ function drawCurrentUnitBg(ctx: CanvasRenderingContext2D, at: xy) {
 }
 
 function drawUnits(at: xy) {
-    const unit = units.find(unit => unit.x === at.x && unit.y === at.y);
+    const unit = units.find(unit => eqXy(unit.at, at));
     // for (const unit of units) {
     if (unit) {
         drawUnit(unit);

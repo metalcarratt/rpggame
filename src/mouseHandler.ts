@@ -39,7 +39,7 @@ const mouseOverActionAt = () =>
     actionAt.some(loc => loc.x === (mouseAt.x + offset.x) && loc.y === (mouseAt.y + offset.y));
 
 export function clickCanvas() {
-    console.log('click');
+    // console.log('click');
     // if (mouseOverMoveTo()) {
     //     moveCharacter(mouseAt.x + offset.x, mouseAt.y + offset.y);
     //     nextUnitTurn();
@@ -47,7 +47,7 @@ export function clickCanvas() {
     if (mouseOverActionAt()) {
         const actionAt = getActionAt(mouseAt.x, mouseAt.y);
         performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y, d: actionAt.d});
-        console.log(`unit has ${currentTurnUnit().energy} remaining`);
+        // console.log(`unit has ${currentTurnUnit().energy} remaining`);
         if (currentTurnUnit().energy < 1) {
             nextUnitTurn();
         }

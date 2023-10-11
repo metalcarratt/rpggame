@@ -4,12 +4,91 @@ import { images } from "@/imageLoader";
 import { findRangeAround, findSpaceClosestTo, isNextTo } from "@/util";
 import { moveCharacter } from "@/moving";
 import { findVisibleTo } from "@/visibility";
+import { SPIDER_BAIT_NAME } from "@/items/randomItems";
+import { items } from "@/items/items";
+
+const attack = (boss: Unit, target: xy) => {
+    // console.log('ATTACK!!');
+    attackUnit(boss, target);
+    boss.energy = 0;
+    if (boss.meta) {
+        boss.meta.target = null;
+    }
+}
+
+const identifyTarget = (boss: Unit, visible: boolean[][]) => {
+    if (boss.meta) {
+        const _player = player();
+        if (visible[_player.at.y][_player.at.x]) {
+            boss.meta.target = _player.at;
+            // console.log(`PLAYER IDENTFIED at ${_player.at.x}, ${_player.at.y}`);
+            return;
+        }
+
+        const baits = items().filter(item => item.type.title === SPIDER_BAIT_NAME);
+        for (const bait of baits) {
+            if (visible[bait.at.y][bait.at.x]) {
+                boss.meta.target = bait.at;
+                // console.log(`BAIT IDENTFIED at ${bait.at.x}, ${bait.at.y}`);
+                return;
+            }
+        }
+    }
+}
+
+const charge = (boss: Unit, target: xy, visible: boolean[][]) => {
+    const range = findRangeAround(boss.at, boss.movement);
+    const closest = findSpaceClosestTo(visible, range, target, boss.at);
+    // console.log(`closest is ${closest.x}, ${closest.y}`);
+    if (closest.x === -1 || closest.y === -1) {
+        boss.energy = 0;
+        return;
+    }
+    // console.log(`CHARGE to ${closest.x}, ${closest.y}`);
+    moveCharacter(closest.x, closest.y);
+    boss.energy--;
+}
+
+const idleWalk = (boss: Unit) => {
+    const range = findRangeAround(boss.at, 1);
+    const randomChoice = Math.floor(Math.random() * range.length);
+    const toX = range[randomChoice].x;
+    const toY = range[randomChoice].y;
+    // console.log(`WALK to ${toX}, ${toY}`);
+    moveCharacter(toX, toY);
+    boss.energy = 0;
+}
+
+const bossMove = (boss: Unit) => {
+    while (boss.energy > 0) {
+        const visible = findVisibleTo([boss]);
+        identifyTarget(boss, visible);
+        // console.log(`visible: ${JSON.stringify(visible)}`);
+        // const playerUnit = player();
+        if (boss.meta && boss.meta.target != null) { //visible[playerUnit.y][playerUnit.x]) {
+            // console.log('has a target');
+
+            if (isNextTo(boss.at, boss.meta.target)) {
+                // console.log('is next to target');
+                attack(boss, boss.meta.target);
+            } else {
+                // console.log('moving toward target');
+                charge(boss, boss.meta.target, visible);
+            }
+        } else {
+            // console.log('has no target');
+            idleWalk(boss);
+        }
+    }
+
+    const visible = findVisibleTo([boss]);
+    identifyTarget(boss, visible);
+}
 
 export const bossUnit = (at: xy): Unit => ({
     name: 'boss',
     img: images.spider,
-    x: at.x,
-    y: at.y,
+    at,
     hp: 2,
     armour: 10,
     qi: 0,
@@ -18,41 +97,10 @@ export const bossUnit = (at: xy): Unit => ({
     movement: 8,
     energy: 8,
     actions: [],
-    mobMove() {
-        while (this.energy > 0) {
-            const visible = findVisibleTo([this]);
-            // console.log(`visible: ${JSON.stringify(visible)}`);
-            const playerUnit = player();
-            if (visible[playerUnit.y][playerUnit.x]) {
-                // console.log('can see player');
-
-                if (isNextTo(this, playerUnit)) {
-                    // attack
-                    // console.log('ATTACK!!');
-                    attackUnit(this, playerUnit);
-                    this.energy = 0;
-
-                } else {
-                    // charge
-                    const range = findRangeAround({x: this.x, y: this.y}, 1);
-                    const closest = findSpaceClosestTo(visible, range, playerUnit, this);
-                    if (closest.x === -1 || closest.y === -1) {
-                        this.energy = 0;
-                        return;
-                    }
-                    moveCharacter(closest.x, closest.y);
-                    this.energy--;
-                    
-                }
-            } else {
-                // console.log('can\'t see player');
-                // idle
-                const range = findRangeAround({x: this.x, y: this.y}, 1);
-                const randomChoice = Math.floor(Math.random() * range.length);
-                moveCharacter(range[randomChoice].x, range[randomChoice].y);
-                this.energy = 0;
-            }
-
-        }
+    meta: {
+        target: null
+    },
+    autoMove() {
+        bossMove(this);
     }
 });

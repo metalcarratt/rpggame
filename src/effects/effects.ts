@@ -11,11 +11,11 @@ export enum EffectType {
 }
 
 export let effects: Effect[] = [
-    {
-        at: {x: 2, y: 4},
-        type: EffectType.LIGHTNING,
-        source: {x: 0, y: 0}
-    }
+    // {
+    //     at: {x: 2, y: 4},
+    //     type: EffectType.LIGHTNING,
+    //     source: {x: 0, y: 0}
+    // }
 ];
 
 export const addEffect = (at: xy, type: EffectType, source: xy) => {
@@ -32,3 +32,6 @@ export const addEffect = (at: xy, type: EffectType, source: xy) => {
 export const clearEffect = (source: xy) => {
     effects = effects.filter(effect => !(effect.source.x === source.x && effect.source.y === source.y));
 }
+
+export const findEffectsForSource = (source: xy) => 
+    effects.filter(effect => effect.source.x === source.x && effect.source.y === source.y);

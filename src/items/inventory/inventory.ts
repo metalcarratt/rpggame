@@ -7,7 +7,7 @@ import { images } from "../../imageLoader"
 import { ItemCategory, ItemType, PlacedItem, placeItem } from "../items"
 import { WALK_ACTION } from "../../actions/commonActions"
 import { ModalDetails, startModal } from "../../actions/modal"
-import { addActiveFormation, removeActiveFormation, updateActiveFormations } from "../../formations/formations"
+import { addFormation, removeFormation, updateFormations } from "../../formations/formations"
 
 export type InventoryItem = {
     type: ItemType,
@@ -71,7 +71,7 @@ const placeInventoryItem = (at: xyd) => {
         placeItem(selectedInventoryItem.value.type, at);
 
         if (selectedInventoryItem.value.type.category === ItemCategory.FLAG) {
-            updateActiveFormations();
+            updateFormations();
         }
     }
     //  else {
@@ -85,9 +85,9 @@ const placeInventoryItem = (at: xyd) => {
 export const takeInventoryItem = (item: PlacedItem) => {
     currentTurnUnit().inventory?.addItem(item.type);
     if (item.type.category === ItemCategory.FORMATION) {
-        removeActiveFormation(item.at);
+        removeFormation(item.at);
     } else if (item.type.category === ItemCategory.FLAG) {
-        updateActiveFormations();
+        updateFormations();
     }
 }
 
@@ -103,7 +103,7 @@ const PlaceItemModal: ModalDetails = {
     onSubmit: (at, inputs) => {
         const item = selectedInventoryItem.value as InventoryItem;
         placeInventoryItem(at);
-        addActiveFormation(inputs[0].value, at, item.type);
+        addFormation(inputs[0].value, at, item.type);
     }
 }
 

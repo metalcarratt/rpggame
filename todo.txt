@@ -1,9 +1,7 @@
 # rpggame
 
 TODO:
-- boss move to bait
-- boss eat bait
-- kill boss (lightning kills)
+- remove dead units
 - formation consumes spirit energy
 - after place inventory stay on same item selected
 - add viewed overlay

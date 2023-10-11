@@ -5,11 +5,12 @@ import { RECALL_SPIRIT_FRIEND_ACTION, SUMMON_SPIRIT_FRIEND_ACTION } from "@/acti
 import { ATTACK_ACTION, PICK_UP_ACTION, WAIT_ACTION, WALK_ACTION } from "@/actions/commonActions";
 import { FORMATION_PLATE, Inventory, LIGHTNING_FLAG } from "@/items/inventory/inventory";
 
+export const PLAYER_NAME = 'player';
+
 export const playerUnit = (at: xy): Unit => ({
-    name: 'player',
+    name: PLAYER_NAME,
     img: images.character,
-    x: at.x,
-    y: at.y,
+    at,
     hp: 2,
     armour: 0,
     qi: 60,

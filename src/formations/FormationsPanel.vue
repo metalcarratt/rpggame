@@ -1,6 +1,6 @@
 <template>
-    <div id="formations" v-if="hasActiveFormations()">
-        <span class="item" v-for="(formation, index) in getActiveFormations()" :key="index">
+    <div id="formations" v-if="hasFormations()">
+        <span class="item" v-for="(formation, index) in getFormations()" :key="index">
             {{ formation.title }}
             <span :class="['image', formation.status]">
                 <img :src="formation.type.img.img.src" />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { hasActiveFormations, getActiveFormations, FormationStatus, activateFormation, deactivateFormation } from './formations';
+import { hasFormations, getFormations, FormationStatus, activateFormation, deactivateFormation } from './formations';
 </script>
 
 <style scoped>

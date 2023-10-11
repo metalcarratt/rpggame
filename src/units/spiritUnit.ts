@@ -6,8 +6,7 @@ import { WAIT_ACTION, WALK_ACTION } from "@/actions/commonActions";
 export const mouseUnit = (at: xy): Unit => ({
     name: 'mouse',
     img: images.mouse,
-    x: at.x,
-    y: at.y,
+    at,
     hp: 1,
     armour: 0,
     qi: 0,

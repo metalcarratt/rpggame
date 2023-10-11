@@ -44,7 +44,7 @@ export const clickAction = (action: Action) => {
     if (action.range) {
         // console.log(`action.range, action=${JSON.stringify(action)}, rangeValidator=${JSON.stringify(action?.range.validator)}`);
         const range = typeof action.range.range === 'number' ? action.range.range : action.range.range();
-        actionAt = findRangeAround(currentTurnUnit(), range, action?.range.validator ?? SpaceCheckerFunction.EMPTY_SPACE);
+        actionAt = findRangeAround(currentTurnUnit().at, range, action?.range.validator ?? SpaceCheckerFunction.EMPTY_SPACE);
         currentAction.value = action;
         render();
     } else {
@@ -67,5 +67,5 @@ export const performAction = (at: xyd) => {
 
 export function getCurrentActions(): Action[] {
     const unit = currentTurnUnit();
-    return unit.actions.filter(action => action.precondition());
+    return unit.actions?.filter(action => action.precondition()) ?? [];
 }

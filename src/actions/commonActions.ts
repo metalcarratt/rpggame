@@ -25,7 +25,7 @@ export const ATTACK_ACTION: Action = {
     },
     perform: (at: xy) => {
         const playerUnit = player();
-        attackUnit(playerUnit, unitAt(at));
+        attackUnit(playerUnit, at);
         currentTurnUnit().energy = 0;
     },
     precondition: () => true
@@ -40,9 +40,8 @@ export const WALK_ACTION: Action = {
         colour: MOVEMENT_HOVER_COLOUR
     },
     perform: (at: xyd) => {
-        console.log(`walking to ${at.x}, ${at.y} with d=${at.d}`);
-        currentTurnUnit().x = at.x;
-        currentTurnUnit().y = at.y;
+        // console.log(`walking to ${at.x}, ${at.y} with d=${at.d}`);
+        currentTurnUnit().at = JSON.parse(JSON.stringify(at));
         currentTurnUnit().energy -= at.d;
     },
     precondition: () => true
@@ -61,6 +60,6 @@ export const PICK_UP_ACTION: Action = {
         takeInventoryItem(item);
     },
     precondition: () => {
-        return findRangeAround({x: currentTurnUnit().x, y: currentTurnUnit().y}, 1, SpaceCheckerFunction.ITEM).length > 0;
+        return findRangeAround(currentTurnUnit().at, 1, SpaceCheckerFunction.ITEM).length > 0;
     }
 }

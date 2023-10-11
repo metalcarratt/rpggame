@@ -35,13 +35,13 @@ export const RECALL_SPIRIT_FRIEND_ACTION: Action = {
     perform() {
         console.log('perform recall');
         removeUnit('mouse');
-        const actions = currentTurnUnit().actions.find(action => action.label === SUMMON_LABEL);
+        const actions = currentTurnUnit().actions?.find(action => action.label === SUMMON_LABEL);
         if (actions) {
             actions.meta[DEPLOYED_ATTRIBUTE] = false;
         }
         currentTurnUnit().energy = 0;
     },
     precondition() {
-        return currentTurnUnit().actions.find(action => action.label === SUMMON_LABEL)?.meta[DEPLOYED_ATTRIBUTE] === true;
+        return currentTurnUnit().actions?.find(action => action.label === SUMMON_LABEL)?.meta[DEPLOYED_ATTRIBUTE] === true;
     }
 }

@@ -27,7 +27,7 @@ export const startModal = (modalDetails: ModalDetails, at: xyd) => {
     console.log(`action modal: ${JSON.stringify(modalDetails)}`);
     modalActive.value = true;
     _modalDetails.value = modalDetails;
-    _at = at;
+    _at = JSON.parse(JSON.stringify(at));
 }
 
 export const submitModal = () => {

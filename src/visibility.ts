@@ -21,14 +21,14 @@ export function findVisibleTo(units: Unit[]): boolean[][] {
     for (const unit of units) {
     //     console.log(`_visible: ${JSON.stringify(_visible)}`);
     // console.log(`x: ${unit.x}. y: ${unit.y}`)
-        followRight(unit, _visible);
-        followLeft(unit, _visible);
-        followUp(unit, _visible);
-        followDown(unit, _visible);
-        followUpLeft(unit, _visible);
-        followDownRight(unit, _visible);
-        followUpRight(unit, _visible);
-        followDownLeft(unit, _visible);
+        followRight(unit.at, _visible);
+        followLeft(unit.at, _visible);
+        followUp(unit.at, _visible);
+        followDown(unit.at, _visible);
+        followUpLeft(unit.at, _visible);
+        followDownRight(unit.at, _visible);
+        followUpRight(unit.at, _visible);
+        followDownLeft(unit.at, _visible);
     }
 
     return _visible;

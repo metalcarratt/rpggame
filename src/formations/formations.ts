@@ -1,9 +1,11 @@
 import { Ref, ref } from "vue";
-import { xyd } from "../util";
+import { eqXy, xyd } from "../util";
 import { ItemCategory, ItemType, items } from "../items/items";
 import { xy } from "../map";
-import { EffectType, addEffect, clearEffect } from "@/effects/effects";
+import { EffectType, addEffect, clearEffect, findEffectsForSource } from "@/effects/effects";
 import { render } from "@/canvas";
+import { addStackUnit, removeStackUnit } from "@/units/turnStack";
+import { attackUnit, unitAt } from "@/units/units";
 
 type FormationCorner = {
     at: xy,
@@ -31,9 +33,9 @@ export enum FormationStatus {
     ALIVE = 'Alive'
 }
 
-const activeFormations: Ref<Formation[]> = ref([]);
+const formations: Ref<Formation[]> = ref([]);
 
-export const addActiveFormation = (title: string, at: xy, type: ItemType) => {
+export const addFormation = (title: string, at: xy, type: ItemType) => {
     const newFormation: Formation = {
         title,
         at,
@@ -46,12 +48,12 @@ export const addActiveFormation = (title: string, at: xy, type: ItemType) => {
         newFormation.status = FormationStatus.BROKEN;
     }
 
-    activeFormations.value.push(newFormation);
-    console.log(`formations: ${JSON.stringify(activeFormations.value)}`);
+    formations.value.push(newFormation);
+    console.log(`formations: ${JSON.stringify(formations.value)}`);
 }
 
-export const updateActiveFormations = () => {
-    for (const formation of activeFormations.value) {
+export const updateFormations = () => {
+    for (const formation of formations.value) {
         formation.corners = checkFormationCorners(formation.at);
         if (!formation.corners.TL || !formation.corners.TR || !formation.corners.BL || !formation.corners.BR) {
             formation.status = FormationStatus.BROKEN;
@@ -61,19 +63,38 @@ export const updateActiveFormations = () => {
     }
 }
 
-export const removeActiveFormation = (at: xy) => {
-    activeFormations.value.splice(activeFormations.value.findIndex(f => f.at.x === at.x && f.at.y === at.y));
+export const removeFormation = (at: xy) => {
+    formations.value.splice(formations.value.findIndex(f => eqXy(f.at, at)));
 }
 
-export const hasActiveFormations = () => activeFormations.value.length > 0;
+export const hasFormations = () => formations.value.length > 0;
 
-export const getActiveFormations = () => activeFormations.value;
+export const getFormations = () => formations.value;
 
 export const activateFormation = (at: xy) => {
-    const formation = activeFormations.value.find(f => f.at.x == at.x && f.at.y == at.y);
+    const formation = formations.value.find(f => eqXy(f.at, at));
     if (formation) {
         formation.status = FormationStatus.ALIVE;
         applyEffects(formation);
+        // add to stack
+        console.log(`adding to stack formation: ${formation.title}`);
+        addStackUnit({
+            name: formation.title,
+            at: formation.at,
+            energy: 1,
+            movement: 1,
+            autoMove: () => {
+                console.log('formation\'s turn');
+                const effects = findEffectsForSource(formation.at);
+                for (const effect of effects) {
+                    const unitAtEffect = unitAt(effect.at);
+                    if (unitAtEffect) {
+                        console.log(`attacking unit at ${unitAtEffect.at.x}, ${unitAtEffect.at.y}`);
+                        attackUnit({power: 20}, effect.at);
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -142,10 +163,15 @@ const applyEffects = (formation: Formation) => {
 }
 
 export const deactivateFormation = (at: xy) => {
-    const formation = activeFormations.value.find(f => f.at.x == at.x && f.at.y == at.y);
+    const formation = formations.value.find(f => eqXy(f.at, at));
     if (formation) {
         formation.status = FormationStatus.IDLE;
         clearEffect(at);
+
+        if (formation) {
+            console.log(`removing from stack formation: ${formation.title}`);
+            removeStackUnit(formation.title);
+        }
     }
 }
 
@@ -160,7 +186,7 @@ const checkFormationCorners = (at: xy): FormationCorners => {
             const ydiff = item.at.y - at.y;
 
             if (Math.abs(xdiff) === Math.abs(ydiff)) {
-                const at = item.at;
+                const at = JSON.parse(JSON.stringify(item.at));
                 const dist = Math.abs(xdiff);
                 if (xdiff < 0 && ydiff < 0) {
                     corners.TL = { at, dist };
