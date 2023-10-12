@@ -19,7 +19,7 @@ const attack = (boss: Unit, target: xy) => {
 const identifyTarget = (boss: Unit, visible: boolean[][]) => {
     if (boss.meta) {
         const _player = player();
-        if (visible[_player.at.y][_player.at.x]) {
+        if (_player && visible[_player.at.y][_player.at.x]) {
             boss.meta.target = _player.at;
             // console.log(`PLAYER IDENTFIED at ${_player.at.x}, ${_player.at.y}`);
             return;

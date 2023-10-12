@@ -1,10 +1,11 @@
 import { SpaceCheckerFunction, findRangeAround, xyd } from "@/util";
 import { Action } from "./actions";
-import { attackUnit, currentTurnUnit, player, unitAt } from "@/units/units";
+import { attackUnit, currentTurnUnit, hasEnemies, player } from "@/units/units";
 import { xy } from "@/map";
-import { ATTACK_HOVER_COLOUR, MOVEMENT_HOVER_COLOUR } from "@/constants";
+import { ATTACK_HOVER_COLOUR, CORNER, MOVEMENT_HOVER_COLOUR } from "@/constants";
 import { takeItem } from "@/items/items";
 import { takeInventoryItem } from "@/items/inventory/inventory";
+import { gameOver } from "@/gameStatus";
 
 export const WAIT_ACTION: Action = {
     label: 'Wait',
@@ -62,4 +63,12 @@ export const PICK_UP_ACTION: Action = {
     precondition: () => {
         return findRangeAround(currentTurnUnit().at, 1, SpaceCheckerFunction.ITEM).length > 0;
     }
+}
+
+export const EXIT_LEVEL_ACTION: Action = {
+    label: 'Exit Level',
+    img: '/exit.png',
+    corners: CORNER.SQUARE,
+    perform: () => gameOver(),
+    precondition: () => !hasEnemies()
 }

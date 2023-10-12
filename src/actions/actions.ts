@@ -1,12 +1,11 @@
 import { Ref, ref } from "vue";
 import { render } from "../canvas";
-import { xy } from "../map";
 import { clearMoveTo } from "../moving";
 import { currentTurnUnit, nextUnitTurn } from "../units/units";
 import { SpaceCheckerFunction, findRangeAround, xyd } from "../util";
 import { WALK_ACTION } from "./commonActions";
 import { findPlayerVisible } from "@/visibility";
-import { startModal } from "./modal";
+import { CORNER } from "@/constants";
 
 export type ActionRange = {
     range: number | (() => number),
@@ -17,7 +16,7 @@ export type ActionRange = {
 export type Action = {
     label: string,
     img: string,
-    // range?: number,
+    corners?: CORNER,
     range?: ActionRange,
     meta?: any,
     perform: (at: xyd) => void,

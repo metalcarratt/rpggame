@@ -5,7 +5,7 @@ import { render } from "../canvas";
 import { PLAYER_NAME, playerUnit } from "./playerUnit";
 import { bossUnit } from "./spiderUnit";
 import { addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUnit } from "./turnStack";
-import { gameOver } from "@/gameStatus";
+import { gameOver, isGameOver } from "@/gameStatus";
 import { xy } from "@/map";
 import { WALK_ACTION } from "@/actions/commonActions";
 import { Inventory } from "@/items/inventory/inventory";
@@ -64,11 +64,17 @@ export const player = () => units.find(unit => unit.name === PLAYER_NAME) as Uni
 
 export const playerTeam = () => units.filter(unit => unit.team === Team.PLAYER);
 
+export const hasEnemies = () => units.filter(unit => unit.team === Team.MONSTER).length > 0;
+
 export const unitAt = (at: xy): Unit => units.find(unit => unit.at.x === at.x && unit.at.y == at.y) as Unit;
 
 export const currentTurnUnit = () => currentStackUnit();
 
 export function nextUnitTurn(): void {
+    if (isGameOver()) {
+        return;
+    }
+    
     nextStackUnit();
 
     const currentUnit = currentTurnUnit();
@@ -118,11 +124,16 @@ export function attackUnit(attacker: Attacker, targetLocation: xy) {
         if (attackee.hp < 0) {
             // DEAD
             attackee.hp = 0;
+
+            removeStackUnit(attackee.name);
+            removeUnit(attackee.name);
+
             // console.log(`attackee dead`);
-            if (attackee.name === 'player') {
+            if (attackee.name === PLAYER_NAME) {
                 gameOver();
             }
         }
+        render();
 
         return;
     }

@@ -15,7 +15,7 @@ const props = defineProps({
     }
 });
 
-const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''];
+const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : '', props.action.corners];
 </script>
 
 <style scoped>
@@ -33,6 +33,10 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
     pointer-events: auto;
 
     border: solid 5px white;
+}
+
+.action.square {
+    border-radius: 10px;
 }
 
 .action.selected {

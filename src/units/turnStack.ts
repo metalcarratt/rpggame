@@ -26,8 +26,13 @@ export function currentStackUnit() {
 }
 
 export function removeStackUnit(name: string) {
+    console.log(`removing unit ${name}`);
     const stackIndex = turnStack.value.findIndex(unit => unit.name === name);
-    turnStack.value.splice(stackIndex, 1);
+    // console.log(`stack index: ${stackIndex}`);
+    if (stackIndex > 0) {
+        turnStack.value.splice(stackIndex, 1);
+    }
+    console.log(`turn stack: ${JSON.stringify(turnStack.value)}`);
 }
 
 export function addStackUnit(unit: CanTakeTurn) {
