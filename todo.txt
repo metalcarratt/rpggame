@@ -2,14 +2,11 @@
 
 TODO:
 [high]
-- after place inventory stay on same item selected
 - conversation
 - tutorial
-- better graphics for walls (3d?)
 - better graphics for player
 
 [medium]
-- add viewed overlay
 - disabled move to non-viewed cell
 - sleep for mouse
 - (wake for mouse)
@@ -18,4 +15,4 @@ TODO:
 - formation consumes spirit energy
 - status panel for units
 - boss kills mouse if too close
-
+- after place inventory stay on same item selected

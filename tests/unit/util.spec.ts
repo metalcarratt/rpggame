@@ -1,7 +1,7 @@
-import { units, unitsZero } from "@/units/units";
-import { updateMap } from "@/map";
-import { findRangeAround, findFreeSpaceAround } from "@/util";
-import { mouseUnit } from "@/units/spiritUnit";
+import { units, unitsZero } from "@/level/units/units";
+import { updateMap } from "@/level/map";
+import { findRangeAround, findFreeSpaceAround } from "@/level/util";
+import { mouseUnit } from "@/level/units/spiritUnit";
 
 const EMPTY_MAP = [
     [0,0,0],

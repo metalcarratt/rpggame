@@ -1,4 +1,4 @@
-import { render } from "./canvas";
+import { render } from "./level/canvas";
 
 export type imgData = {
     img: null | HTMLImageElement,
@@ -19,6 +19,7 @@ const loadImg = (image: imgData, imgLoc: string) => {
 export const images = {
     floor: initImg(),
     cave: initImg(),
+    w2: initImg(),
     character: initImg(),
     spider: initImg(),
     mouse: initImg(),
@@ -47,14 +48,15 @@ const checkLoaded = () => {
 }
 
 export function initImages() {
-    loadImg(images.floor, '../floor1.jpg');
-    loadImg(images.cave, '../cave.jpg');
-    loadImg(images.character, '../chara.png');
+    loadImg(images.floor, '../f1.jpg');
+    loadImg(images.cave, '../t1.png');
+    loadImg(images.w2, '../ww.jpg');
+    loadImg(images.character, '../ch.png');
     loadImg(images.spider, '../spider.png');
     loadImg(images.mouse, '../mouse.png');
     loadImg(images.lightningFlag, '../lightning_flag.png');
     loadImg(images.formationPlate, '../formation_plate.png');
-    loadImg(images.animalCorpse, '../animal.png');
+    loadImg(images.animalCorpse, '../lizard.png');
     loadImg(images.lightning1, '../effect_lightning_1.png');
     loadImg(images.lightning2, '../effect_lightning_2.png');
     loadImg(images.lightning3, '../effect_lightning_3.png');
