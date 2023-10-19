@@ -6,12 +6,13 @@ import { ATTACK_ACTION, EXIT_LEVEL_ACTION, PICK_UP_ACTION, WAIT_ACTION, WALK_ACT
 import { FORMATION_PLATE, Inventory, LIGHTNING_FLAG } from "@/level/items/inventory/inventory";
 import { IMG_TYPE } from "../constants";
 
-export const PLAYER_NAME = 'player';
+export const PLAYER_NAME = 'Azeena';
 
 export const playerUnit = (at: xy): Unit => ({
     name: PLAYER_NAME,
     img: images.character,
     imgType: IMG_TYPE.STANDING,
+    profileImg: 'player_profile.png',
     at,
     hp: 2,
     armour: 0,

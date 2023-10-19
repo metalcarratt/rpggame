@@ -1,9 +1,11 @@
 <template>
     <LevelContainer></LevelContainer>
+    <DialogModal />
 </template>
 
 <script setup>
 import LevelContainer from './level/LevelContainer.vue';
+import DialogModal from './dialog/DialogModal.vue';
 </script>
 
 <style>

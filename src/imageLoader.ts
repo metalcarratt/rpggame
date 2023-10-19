@@ -52,7 +52,7 @@ export function initImages() {
     loadImg(images.cave, '../t1.png');
     loadImg(images.w2, '../ww.jpg');
     loadImg(images.character, '../ch.png');
-    loadImg(images.spider, '../spider.png');
+    loadImg(images.spider, '../spider2.png');
     loadImg(images.mouse, '../mouse.png');
     loadImg(images.lightningFlag, '../lightning_flag.png');
     loadImg(images.formationPlate, '../formation_plate.png');

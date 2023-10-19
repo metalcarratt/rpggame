@@ -4,6 +4,7 @@ import { actionAt, getActionAt, performAction } from "@/level/actions/actions";
 import { xy } from "./map";
 import { CELL_SIZE, dpi, getCanvas, offset, render } from "@/level/canvas";
 import { currentTurnUnit, nextUnitTurn } from "@/level/units/units";
+import { guideTick } from "./guide/guide";
 
 export const mouseHover = ref(false);
 export const mouseAt: { x: number, y: number } = { x: -1, y: -1 };
@@ -44,6 +45,7 @@ export function clickCanvas() {
     //     moveCharacter(mouseAt.x + offset.x, mouseAt.y + offset.y);
     //     nextUnitTurn();
     // } else 
+
     if (mouseOverActionAt()) {
         const actionAt = getActionAt(mouseAt.x, mouseAt.y);
         performAction({x: mouseAt.x + offset.x, y: mouseAt.y + offset.y, d: actionAt.d});
@@ -52,4 +54,6 @@ export function clickCanvas() {
             nextUnitTurn();
         }
     }
+
+    guideTick();
 }

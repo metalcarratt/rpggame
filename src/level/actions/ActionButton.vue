@@ -1,10 +1,12 @@
 <template>
     <span :class="classes()" @click="() => clickAction(props.action)">
         <img :src="props.action.img"/>
+        <ToolTip target="action" :name="props.action.label"/>
     </span>
 </template>
 
 <script setup>
+import ToolTip from '../guide/ToolTip.vue';
 import { defineProps } from 'vue';
 import { isCurrentAction, Action, clickAction } from './actions';
 
@@ -33,6 +35,7 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
     pointer-events: auto;
 
     border: solid 5px white;
+    position: relative;
 }
 
 .action.square {

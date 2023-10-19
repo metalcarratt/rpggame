@@ -2,17 +2,18 @@
 
 TODO:
 [high]
-- conversation
-- tutorial
-- better graphics for player
+- show steps for moving units
+- show battle for fighting units
+- show death for killed units
+- show end game sequence
 
 [medium]
+- status panel for units
 - disabled move to non-viewed cell
 - sleep for mouse
 - (wake for mouse)
 
 [low]
 - formation consumes spirit energy
-- status panel for units
 - boss kills mouse if too close
 - after place inventory stay on same item selected

@@ -11,3 +11,18 @@ export enum IMG_TYPE {
     STANDING,
     OVERSIZED
 }
+
+export enum GuideType {
+    TOOLTIP,
+    DIALOG
+}
+
+export enum GuideDirection {
+    LEFT = 'left',
+    BOTTOM = 'bottom'
+}
+
+export const enum TargetType {
+    CANVAS = 'canvas',
+    ACTION = 'action'
+}

@@ -1,5 +1,4 @@
 import { Ref, ref } from "vue";
-import { Unit } from "./units";
 import { xy } from "@/level/map";
 import { Action } from "@/level/actions/actions";
 import { Inventory } from "@/level/items/inventory/inventory";
@@ -16,13 +15,18 @@ interface CanTakeTurn {
 
 const turnStack: Ref<CanTakeTurn[]> = ref([]);
 
+const turnIndex = ref(0);
+
 export function nextStackUnit() {
-    const unitTaken = turnStack.value.splice(0, 1)[0];
-    turnStack.value.push(unitTaken);
+   
+    turnIndex.value++;
+    if (turnIndex.value >= turnStack.value.length) {
+        turnIndex.value = 0;
+    }
 }
 
 export function currentStackUnit() {
-    return turnStack.value[0];
+    return turnStack.value[turnIndex.value];
 }
 
 export function removeStackUnit(name: string) {

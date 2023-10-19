@@ -60,7 +60,7 @@ const idleWalk = (boss: Unit) => {
     boss.energy = 0;
 }
 
-const bossMove = (boss: Unit) => {
+const bossMove = async (boss: Unit) => {
     while (boss.energy > 0) {
         const visible = findVisibleTo([boss]);
         identifyTarget(boss, visible);
@@ -86,10 +86,13 @@ const bossMove = (boss: Unit) => {
     identifyTarget(boss, visible);
 }
 
+
+
 export const bossUnit = (at: xy): Unit => ({
-    name: 'boss',
+    name: 'Turqoise Spider',
     img: images.spider,
     imgType: IMG_TYPE.OVERSIZED,
+    profileImg: 'spider_profile.png',
     at,
     hp: 2,
     armour: 10,

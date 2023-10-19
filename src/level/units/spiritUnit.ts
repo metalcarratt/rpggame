@@ -4,8 +4,9 @@ import { images } from "@/imageLoader";
 import { WAIT_ACTION, WALK_ACTION } from "@/level/actions/commonActions";
 
 export const mouseUnit = (at: xy): Unit => ({
-    name: 'mouse',
+    name: 'Mouse',
     img: images.mouse,
+    profileImg: 'mouse_profile.png',
     at,
     hp: 1,
     armour: 0,

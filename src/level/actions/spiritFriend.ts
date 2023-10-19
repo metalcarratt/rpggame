@@ -5,7 +5,7 @@ import { mouseUnit } from "@/level/units/spiritUnit";
 import { SpaceCheckerFunction } from "@/level/util";
 import { ATTACK_HOVER_COLOUR } from "@/level/constants";
 
-const SUMMON_LABEL = 'Spirit Friend';
+export const SUMMON_LABEL = 'Spirit Friend';
 const DEPLOYED_ATTRIBUTE = 'deployed';
 
 export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {

@@ -24,6 +24,7 @@ export type Unit = {
     img: imgData,
     imgType?: IMG_TYPE,
     at: xy,
+    profileImg?: string,
     // x: number,
     // y: number,
     team: Team,
