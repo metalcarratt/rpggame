@@ -42,6 +42,7 @@ export const images = {
     profileReading: initImg()
 }
 
+
 const checkLoaded = () => {
     const imgs = Object.values(images);
     // console.log(`imgs: ${JSON.stringify(imgs)}`);
