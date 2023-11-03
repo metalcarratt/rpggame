@@ -7,10 +7,11 @@ import { gameOver } from "@/level/gameStatus";
 import { SpaceCheckerFunction, findRangeAround } from "../map/util/findAround";
 import { xy } from "../map/xy";
 import { xyd } from "../map/xyd";
+import { IMG_ATTACKING, IMG_EXITING, IMG_TAKING, IMG_WAITING, IMG_WALKING } from "@/imageLoader";
 
 export const WAIT_ACTION: Action = {
     label: 'Wait',
-    img: '/waiting.png',
+    img: IMG_WAITING,
     perform: () => {
         currentTurnUnit().energy = 0;
     },
@@ -19,7 +20,7 @@ export const WAIT_ACTION: Action = {
 
 export const ATTACK_ACTION: Action = {
     label: 'Attack',
-    img: '/attack.png',
+    img: IMG_ATTACKING,
     range: {
         range: 1,
         validator: SpaceCheckerFunction.ENEMY_UNIT,
@@ -35,7 +36,7 @@ export const ATTACK_ACTION: Action = {
 
 export const WALK_ACTION: Action = {
     label: 'Walk',
-    img: '/walk.png',
+    img: IMG_WALKING,
     range: {
         range: () => currentTurnUnit().energy,
         validator: SpaceCheckerFunction.EMPTY_SPACE,
@@ -51,7 +52,7 @@ export const WALK_ACTION: Action = {
 
 export const PICK_UP_ACTION: Action = {
     label: 'Pick Up',
-    img: '/take.png',
+    img: IMG_TAKING,
     range: {
         range: 1,
         validator: SpaceCheckerFunction.ITEM,
@@ -68,7 +69,7 @@ export const PICK_UP_ACTION: Action = {
 
 export const EXIT_LEVEL_ACTION: Action = {
     label: 'Exit Level',
-    img: '/exit.png',
+    img: IMG_EXITING,
     corners: CORNER.SQUARE,
     perform: () => gameOver(`Completed level!`, ''),
     precondition: () => !hasEnemies()

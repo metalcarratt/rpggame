@@ -5,13 +5,14 @@ import { ATTACK_HOVER_COLOUR } from "@/level/constants";
 import { SpaceCheckerFunction } from "../map/util/findAround";
 import { xy } from "../map/xy";
 import { hasStackUnit } from "../units/turnStack";
+import { IMG_RECALL_MOUSE, IMG_SUMMON_MOUSE } from "@/imageLoader";
 
 export const SUMMON_LABEL = 'Spirit Friend';
 const DEPLOYED_ATTRIBUTE = 'deployed';
 
 export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
     label: SUMMON_LABEL,
-    img: 'mouse_summon.png',
+    img: IMG_SUMMON_MOUSE,
     range: {
         range: 1,
         validator: SpaceCheckerFunction.EMPTY_SPACE,
@@ -32,7 +33,7 @@ export const SUMMON_SPIRIT_FRIEND_ACTION: Action = {
 
 export const RECALL_SPIRIT_FRIEND_ACTION: Action = {
     label: 'Recall',
-    img: '/mouse_recall.png',
+    img: IMG_RECALL_MOUSE,
     perform() {
         console.log('perform recall');
         removeUnit('Mouse');

@@ -1,3 +1,4 @@
+import { IMG_PROFILE_COLD, IMG_PROFILE_IMG, IMG_PROFILE_READING } from "@/imageLoader";
 import { PICK_UP_ACTION } from "../actions/commonActions";
 import { SUMMON_LABEL } from "../actions/spiritFriend";
 import { GuideDirection, GuideType, TargetType } from "../constants";
@@ -11,30 +12,27 @@ import { visible } from "../visibility";
 import { Guide, setGuides } from "./guide";
 
 const NAME = 'Azeena';
-const PROFILE_IMG = 'profile.png';
-const PROFILE_COLD = 'profile_cold.png';
-const PROFILE_READING = 'profile_reading.png';
 
 export const introDialog = [
     {
         name: NAME,
         speech: `'Brrr... it's colder in here than I expected.'`,
-        profileImg: PROFILE_COLD
+        profileImg: IMG_PROFILE_COLD
     },
     {
         name: NAME,
         speech: `'According to the book, there are tens of thousands of these caves hidden in the north-western mountains that encircle the desert.'`,
-        profileImg: PROFILE_READING
+        profileImg: IMG_PROFILE_READING
     },
     {
         name: NAME,
         speech: `'They are the remains of an ancient civilization that disappeared a long time ago and are now inhabited by monsters.'`,
-        profileImg: PROFILE_READING
+        profileImg: IMG_PROFILE_READING
     },
     {
         name: NAME,
         speech: `'This one should just be the lair of a giant spider though. Even though it's tough, with a little bit of skill, I should be able to take it out.'`,
-        profileImg: PROFILE_IMG
+        profileImg: IMG_PROFILE_IMG
     }
 ]
 
@@ -67,12 +65,12 @@ const baitDialog = {
         {
             name: NAME,
             speech: `'Are those dead lizards?'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
         {
             name: NAME,
             speech: `'Apparantly spiders like to eat lizards. Maybe I can use them as bait?'`,
-            profileImg: PROFILE_READING
+            profileImg: IMG_PROFILE_READING
         },
     ],
     ready: baitVisible,
@@ -121,12 +119,12 @@ const spyDialog = {
         {
             name: NAME,
             speech: `'This place is scary. I shouldn't just walk around aimlessly like this.'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
         {
             name: NAME,
             speech: `'I know. I can summon my spirit friend. She's a mouse, and whatever she can see, I can see.'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
     ],
     ready: () => currentTurnUnit().at.x >= 4,
@@ -163,22 +161,22 @@ const spiderDialog = {
         {
             name: NAME,
             speech: `'That's the spider! I need to be careful. There's no way I could defeat that thing by just charging in.'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
         {
             name: NAME,
             speech: `'Lucky I bought materials for laying a formation. According to the book, I need to place a formation plate in the center of a large area and place a lightning flags at each corner.'`,
-            profileImg: PROFILE_READING
+            profileImg: IMG_PROFILE_READING
         },
         {
             name: NAME,
             speech: `'Then I can activate the formation to release deadly lightning. Better not to get hit by that!'`,
-            profileImg: PROFILE_READING
+            profileImg: IMG_PROFILE_READING
         },
         {
             name: NAME,
             speech: `'Okay! Let's try laying that formation plate somewhere!'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
     ],
     ready: spiderVisible,
@@ -192,7 +190,7 @@ const formationPlateDialog = {
         {
             name: NAME,
             speech: `'I've laid the formation plate. Now I need to put a lightning flag in one of the four corners. It shouldn't matter how far they are as long as they are on the corner...'`,
-            profileImg: PROFILE_READING
+            profileImg: IMG_PROFILE_READING
         }
     ],
     ready: () => hasFormations(),
@@ -206,12 +204,12 @@ const formationCompleteDialog = {
         {
             name: NAME,
             speech: `'The formation is complete. Once I lure the spider here I can activate the formation to zap it.'`,
-            profileImg: PROFILE_READING
+            profileImg: IMG_PROFILE_READING
         },
         {
             name: NAME,
             speech: `'Better not stand in range of the formation when it's active..!'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         }
     ],
     ready: () => hasFormations() && getFormations()[0].status === FormationStatus.IDLE,
@@ -225,12 +223,12 @@ const spiderDeadDialog = {
         {
             name: NAME,
             speech: `'I killed it! I actually killed it! I can't believe I really did it!'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         },
         {
             name: NAME,
             speech: `'Phew! Now that's over, I can leave this place once I'm ready'`,
-            profileImg: PROFILE_IMG
+            profileImg: IMG_PROFILE_IMG
         }
     ],
     ready: () => !hasEnemies(),
