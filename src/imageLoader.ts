@@ -48,18 +48,18 @@ const checkLoaded = () => {
 }
 
 export function initImages() {
-    loadImg(images.floor, '../f1.jpg');
-    loadImg(images.cave, '../t1.png');
-    loadImg(images.w2, '../ww.jpg');
-    loadImg(images.character, '../ch.png');
-    loadImg(images.spider, '../spider2.png');
-    loadImg(images.mouse, '../mouse.png');
-    loadImg(images.lightningFlag, '../lightning_flag.png');
-    loadImg(images.formationPlate, '../formation_plate.png');
-    loadImg(images.animalCorpse, '../lizard.png');
-    loadImg(images.lightning1, '../effect_lightning_1.png');
-    loadImg(images.lightning2, '../effect_lightning_2.png');
-    loadImg(images.lightning3, '../effect_lightning_3.png');
-    loadImg(images.lightning4, '../effect_lightning_4.png');
+    loadImg(images.floor, 'f1.jpg');
+    loadImg(images.cave, 't1.png');
+    loadImg(images.w2, 'ww.jpg');
+    loadImg(images.character, 'ch.png');
+    loadImg(images.spider, 'spider2.png');
+    loadImg(images.mouse, 'mouse.png');
+    loadImg(images.lightningFlag, 'lightning_flag.png');
+    loadImg(images.formationPlate, 'formation_plate.png');
+    loadImg(images.animalCorpse, 'lizard.png');
+    loadImg(images.lightning1, 'effect_lightning_1.png');
+    loadImg(images.lightning2, 'effect_lightning_2.png');
+    loadImg(images.lightning3, 'effect_lightning_3.png');
+    loadImg(images.lightning4, 'effect_lightning_4.png');
     checkLoaded();
 }
