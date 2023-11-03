@@ -2,18 +2,19 @@
 
 TODO:
 [high]
-- show steps for moving units
-- show battle for fighting units
-- show death for killed units
-- show end game sequence
 
 [medium]
-- status panel for units
+- show try again sequence
+- UI responsiveness
+- Check help guides are sufficient
+
+[low]
+- Fix summon/recall spirit unit
+
+
+[Unimportant]
 - disabled move to non-viewed cell
 - sleep for mouse
 - (wake for mouse)
-
-[low]
 - formation consumes spirit energy
 - boss kills mouse if too close
-- after place inventory stay on same item selected

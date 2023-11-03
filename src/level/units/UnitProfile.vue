@@ -6,7 +6,14 @@
         <span class="details">
             <span class="name">{{ props.unit.name }}</span>
             <span class="stats">
-                H {{ props.unit.hp }} A {{  props.unit.armour }} Qi {{ props.unit.qi }}
+                <span class="armour">{{  props.unit.armour }}</span>
+                <img src="icon_armour.png" class="icon" />
+
+                <span class="hp">{{ props.unit.hp }}</span>
+                <img src="icon_heart.png" class="icon" />
+
+                <span class="qi">{{ props.unit.qi }}</span>
+                <img src="icon_qi.png" class="icon" />
             </span>
         </span>
 
@@ -14,7 +21,7 @@
     </li>
 </template>
 
-<script setup>
+<script setup >
 import { defineProps } from 'vue';
 import { Unit } from '@/level/units/units';
 
@@ -40,7 +47,7 @@ li {
     display: flex;
     flex-direction: row;
 
-    width: 200px;
+    width: 220px;
     color: #e7e7c8;
     position: relative;
 }
@@ -90,5 +97,28 @@ li img {
 
 .stats {
     color: #b3b397;
+    display: flex;
+    align-items: center;
+}
+
+.stats .icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+
+.stats .hp {
+    color: #e16dbe;
+    font-weight: 700;
+}
+
+.stats .armour {
+    color: #becfe5;
+    font-weight: 700;
+}
+
+.stats .qi {
+    color: #ffd11f;
+    font-weight: 700;
 }
 </style>

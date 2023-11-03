@@ -1,5 +1,5 @@
 <template>
-    <BaseModal>
+    <BaseModal v-if="isModalActive()">
         <h1>{{ getTitle() }}</h1>
         <fieldset v-for="(input, index) of getInputs()" :key="index">
             <label>{{ input.title }}</label>
@@ -16,7 +16,8 @@ import {
     getInputs, 
     submitModal, 
     cancelModal, 
-    getTitle 
+    getTitle,
+    isModalActive
 } from '@/modal/modal';
 </script>
 

@@ -2,10 +2,12 @@ import { Ref, ref } from "vue";
 import { render } from "../canvas";
 import { clearMoveTo } from "../moving";
 import { currentTurnUnit, nextUnitTurn } from "../units/units";
-import { SpaceCheckerFunction, findRangeAround, xyd } from "../util";
 import { WALK_ACTION } from "./commonActions";
 import { findPlayerVisible } from "@/level/visibility";
 import { CORNER } from "@/level/constants";
+import { SpaceCheckerFunction, findRangeAround } from "../map/util/findAround";
+import { xyd } from "../map/xyd";
+import { gameOver, isGameOver } from "../gameStatus";
 
 export type ActionRange = {
     range: number | (() => number),
@@ -51,15 +53,19 @@ export const clickAction = (action: Action) => {
         performAction({x:0, y:0, d:0});
         console.log(`unit has ${currentTurnUnit().energy} remaining`);
         if (currentTurnUnit().energy < 1) {
+            console.log('no energy left, next unit turn');
             nextUnitTurn();
-        }
+        } 
+        console.log('click action finished');
     }
 }
 
 export const performAction = (at: xyd) => {
     currentAction.value.perform(at);
-    currentAction.value = WALK_ACTION;
-    clearActionAt();
+    if (!currentAction.value.precondition() || currentTurnUnit().energy <= 0 || isGameOver()) {
+        currentAction.value = WALK_ACTION;
+    }
+    
     findPlayerVisible();
     clickAction(currentAction.value);
 }

@@ -1,17 +1,18 @@
 import { imgData } from "../../imageLoader";
 import { Action, clickAction } from "../actions/actions";
-import { findPlayerVisible } from "../visibility";
+import { findPlayerVisible, visible } from "../visibility";
 import { render } from "../canvas";
 import { PLAYER_NAME, playerUnit } from "./playerUnit";
 import { bossUnit } from "./spiderUnit";
-import { addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUnit } from "./turnStack";
-import { gameOver, isGameOver } from "@/level/gameStatus";
-import { xy } from "@/level/map";
+import { CanTakeTurn, addStackUnit, currentStackUnit, initStack, nextStackUnit, removeStackUnit } from "./turnStack";
+import { GAME_OVER_DEFEAT, gameOver, isGameOver } from "@/level/gameStatus";
 import { WALK_ACTION } from "@/level/actions/commonActions";
 import { Inventory } from "@/level/items/inventory/inventory";
 import { items, takeItem } from "@/level/items/items";
-import { eqXy } from "@/level/util";
 import { IMG_TYPE } from "../constants";
+import { eqXy } from "../map/util/eqXy";
+import { xy } from "../map/xy";
+import { UnitBattleDetails, startBattle } from "../battle/battle";
 
 export enum Team {
     PLAYER,
@@ -19,7 +20,7 @@ export enum Team {
     MONSTER
 }
 
-export type Unit = {
+export interface Unit extends CanTakeTurn {
     name: string,
     img: imgData,
     imgType?: IMG_TYPE,
@@ -37,7 +38,8 @@ export type Unit = {
     inventory?: Inventory,
     actions: Action[],
     meta?: Record<string, any>,
-    autoMove?: () => void
+    autoMove?: () => boolean,
+    battleDetails: UnitBattleDetails
 }
 
 export let units: Unit[] = [];
@@ -56,9 +58,10 @@ export function addUnit(unit: Unit) {
 
 export function removeUnit(name: string) {
     const unitIndex = units.findIndex(unit => unit.name === name);
-    units.splice(unitIndex, 1);
-
-    removeStackUnit(name);
+    if (unitIndex >= 0) {
+        units.splice(unitIndex, 1);
+        removeStackUnit(name);
+    }
 }
 
 export const unitsZero = () => units = [];
@@ -85,10 +88,38 @@ export function nextUnitTurn(): void {
     // console.log(`current unit energy: ${currentUnit.energy}`);
     // console.log(`current unit turn: ${currentUnit.name}`);
 
+    // if (currentUnit.autoMove) {
+    //     // console.log(`mob move`);
+    //     currentUnit.autoMove();
+    //     nextUnitTurn();
+        
+    // } else {
+    //     // console.log(`player move`);
+    //     // findMoveTo();
+    //     startPlayerTurn();
+    // }
+
+    doMove(currentUnit);
+}
+
+export function doMove(currentUnit: CanTakeTurn): void {
+    console.log('do move');
     if (currentUnit.autoMove) {
+        console.log(`## monster taking move (1)`);
         // console.log(`mob move`);
-        currentUnit.autoMove();
-        nextUnitTurn();
+        const finished = currentUnit.autoMove();
+        if (!finished) {
+            if (visible[currentUnit.at.y][currentUnit.at.x]) {
+                console.log(`## render and set timer`);
+                render();
+                setTimeout(() => doMove(currentUnit), 400);
+            } else {
+                doMove(currentUnit);
+            }
+            return;
+        } else {
+            nextUnitTurn();
+        }
         
     } else {
         // console.log(`player move`);
@@ -104,7 +135,9 @@ export function startPlayerTurn() {
 }
 
 interface Attacker {
-    power: number
+    power: number,
+    name: string,
+    battleDetails?: UnitBattleDetails
 }
 
 export function attackUnit(attacker: Attacker, targetLocation: xy) {
@@ -133,9 +166,10 @@ export function attackUnit(attacker: Attacker, targetLocation: xy) {
 
             // console.log(`attackee dead`);
             if (attackee.name === PLAYER_NAME) {
-                gameOver();
+                gameOver(`Defeated by ${attacker.name}`, GAME_OVER_DEFEAT);
             }
         }
+        startBattle(attacker.power, attacker.battleDetails ?? null, attackee.battleDetails);
         render();
 
         return;

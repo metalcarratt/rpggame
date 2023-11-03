@@ -1,13 +1,17 @@
 <template>
-    <div class="matte" v-if="isGameOver()">
-        <div class="dialog">
-            <label>Game Over</label>
+    <div class="matte" v-if="isGameOver() && !isInBattle()">
+        <div class="dialog gameOver">
+            <h1>Game Over</h1>
+            <span class="message">{{ gameOverMsg() }}</span>
+            <img :src="gameOverImg()" />
+            
         </div>
     </div>
 </template>
 
 <script setup>
-import { isGameOver } from '@/level/gameStatus';
+import { isGameOver, gameOverMsg, gameOverImg } from '@/level/gameStatus';
+import { isInBattle } from '@/level/battle/battle';
 </script>
 
 <style scoped>
@@ -25,5 +29,17 @@ import { isGameOver } from '@/level/gameStatus';
 .dialog {
     padding: 20px;
     background-color: white;
+}
+
+.gameOver h1 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.message {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-style: italic;
+  color: #d85f5f;
 }
 </style>

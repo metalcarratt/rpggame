@@ -1,5 +1,5 @@
 <template>
-    <div class="matte" v-if="hasDialog()" @click="next">
+    <ModalMatte v-if="hasDialog()" @click="next">
         <div class="dialog">
             <span class="image">
                 <img :src="getDialog().profileImg" />
@@ -9,11 +9,12 @@
                 <span class="speech">{{ getDialog().speech }}</span>
             </span>
         </div>
-    </div>
+    </ModalMatte>
 </template>
 
 <script setup>
 import { hasDialog, getDialog, dialogNext } from './dialog';
+import ModalMatte from '../modal/ModalMatte.vue'
 
 const next = () => {
     dialogNext();

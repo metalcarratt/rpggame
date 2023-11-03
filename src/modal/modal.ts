@@ -1,5 +1,5 @@
+import { xyd } from "@/level/map/xyd";
 import { Ref, ref } from "vue";
-import { xyd } from "@/level/util";
 
 export type ModalInput = {
     title: string,

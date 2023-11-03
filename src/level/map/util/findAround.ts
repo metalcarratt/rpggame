@@ -1,12 +1,9 @@
-import { items } from "./items/items";
-import { map, xy } from "./map";
-import { Team, units } from "./units/units";
-
-export type xyd = {
-    x: number,
-    y: number,
-    d: number
-}
+import { Team, units } from "@/level/units/units";
+import { map } from "../map";
+import { eqXy } from "./eqXy";
+import { items } from "@/level/items/items";
+import { xy } from "../xy";
+import { xyd } from "../xyd";
 
 export enum SpaceCheckerFunction {
     EMPTY_SPACE,
@@ -83,7 +80,7 @@ export function findRangeAround(around: xy, range: number, validateFn?: SpaceChe
     const _validateFn = validateFn ?? SpaceCheckerFunction.EMPTY_SPACE;
     // console.log(`validate function: ${_validateFn}`);
     const spaces1 = findFreeSpaceAround(around, _validateFn);
-    let spacesAround: xyd[] = spaces1.map(space => ({...space, d: 1}));
+    let spacesAround: xyd[] = spaces1.map(space => buildXyd(space, 1));
     
 
     for (let n = 0; n < range - 1; n++) {
@@ -91,37 +88,13 @@ export function findRangeAround(around: xy, range: number, validateFn?: SpaceChe
         const length = spacesAround.length;
         for (let iter = 0; iter < length; iter++) {
             const spaces = findSpaceAroundInternal(spacesAround[iter], spacesAround, _validateFn);
-            spacesAround = spacesAround.concat(spaces.map(space => ({...space, d: n + 2})));
+            spacesAround = spacesAround.concat(spaces.map(space => buildXyd(space, n + 2)));
         }
     }
 
     return spacesAround;
 }
 
-export function isNextTo(from: xy, to: xy) {
-    return from.x >= to.x - 1 
-    && from.x <= to.x + 1 
-    && from.y >= to.y - 1 
-    && from.y <= to.y + 1
+function buildXyd(space: xy, d: number) {
+    return {...space, d}
 }
-
-export function findSpaceClosestTo(spaces: boolean[][], moves: xy[], target: xy, from: xy): xy {
-    const visibleLocations = moves.filter(move => spaces[move.y][move.x] && map[move.y][move.x] === 0);
-    const attackableLocations = visibleLocations.filter(move => isNextTo(move, target));
-
-    let closestLocation = {x: -1, y: -1};
-    let closestDistance = -1;
-    for (const location of attackableLocations) {
-        const distance = Math.abs(target.x - from.x) + Math.abs(target.y - from.y);
-        if (closestDistance === - 1 || closestDistance > distance ) {
-            closestDistance = distance;
-            closestLocation = location;
-        }
-    }
-
-    // todo may not be in range
-
-    return closestLocation;
-}
-
-export const eqXy = (at1: xy, at2: xy) => at1.x === at2.x && at1.y === at2.y;

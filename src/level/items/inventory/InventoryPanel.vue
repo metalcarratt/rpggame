@@ -44,7 +44,7 @@ const itemClasses = (item) => ['item', isSelectedInventoryItem(item) ? 'selected
 }
 
 #inventory.selected {
-    border: 4px solid #d4d401;
+    border: 4px solid white;
 }
 
 #inventory h2 {
@@ -60,7 +60,7 @@ const itemClasses = (item) => ['item', isSelectedInventoryItem(item) ? 'selected
 }
 
 #inventory.selected h2 {
-    border: 2px solid #d4d401;
+    border: 2px solid white;
 }
 
 
@@ -71,11 +71,11 @@ const itemClasses = (item) => ['item', isSelectedInventoryItem(item) ? 'selected
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    border: 1px solid #343333;
+    border: 4px solid #343333;
 }
 
 #inventory .item.selected {
-    border: 1px solid #d4d401;
+    border: 4px solid white;
 }
 
 #inventory .item:hover {

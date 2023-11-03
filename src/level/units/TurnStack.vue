@@ -59,7 +59,7 @@ ul#turnStack li {
     display: flex;
     flex-direction: row;
 
-    width: 200px;
+    width: 220px;
     color: #e7e7c8;
 }
 

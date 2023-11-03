@@ -1,138 +1,55 @@
-import { units, unitsZero } from "@/level/units/units";
-import { updateMap } from "@/level/map";
-import { findRangeAround, findFreeSpaceAround } from "@/level/util";
-import { mouseUnit } from "@/level/units/spiritUnit";
+import { unitsZero } from "@/level/units/units";
+import { LEVEL1, map, updateMap } from "@/level/map/map";
+import { findSpaceClosestTo } from "@/level/map/util/findSpace";
 
-const EMPTY_MAP = [
-    [0,0,0],
-    [0,1,0],
-    [0,0,0]
+const NARROW_MAP = [
+    [0,0,0,0]
 ];
 
-const DIAGONAL_MAP = [
-    [1,0,0],
-    [0,1,0],
-    [0,0,1]
-]
-
-const CROSS_MAP = [
-    [1,0,1],
-    [0,1,0],
-    [1,0,1]
-]
-
-const BIG_MAP = [
-    [0,0,0,0,0],
-    [0,0,0,0,0],
-    [0,0,1,0,0],
-    [0,0,0,0,0],
-    [0,0,0,0,0]
-]
-
-const MAZE_MAP = [
-    [0,0,0],
-    [0,1,0],
-    [1,1,0]
-]
-
-describe('findFreeSpaceAround', () => {
+describe('findSpaceClosestTo', () => {
     beforeEach(() => {
         unitsZero();
     });
 
-    it('Finds all spaces on empty map', () => {
-        updateMap(EMPTY_MAP);
+    it('...', () => {
+        updateMap(LEVEL1);
 
-        const spaces = findFreeSpaceAround({ x: 1, y: 1});
+        console.log(`${JSON.stringify(map)}`);
 
-        expect(spaces.length).toBe(8);
-        expect(spaces).toContainEqual({x: 0, y: 0});
-        expect(spaces).toContainEqual({x: 2, y: 2});
+        const range = [{"x":1,"y":6,"d":1},{"x":1,"y":7,"d":1},{"x":1,"y":8,"d":1},{"x":2,"y":6,"d":1},{"x":2,"y":8,"d":1},{"x":3,"y":6,"d":1},{"x":3,"y":7,"d":1},{"x":3,"y":8,"d":1}];
+        const target = {"x":7,"y":7,"d":1};
+        const visible = [
+            [false,false,false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false,false,true],
+            [false,false,false,false,false,false,false,false,false,true,false],
+            [true,true,true,true,true,false,false,false,true,false,false],
+            [true,true,true,true,true,true,true,true,true,false,false],
+            [true,true,true,true,true,true,true,true,true,false,false],
+            [true,true,true,true,true,true,true,true,true,false,false],
+            [true,true,true,true,true,false,true,true,true,true,false]
+        ];
+
+        const result = findSpaceClosestTo(visible, range, target, {x: 2, y: 7});
+        console.log(`findSpaceClosestTo = ${JSON.stringify(result)}`);
+        expect(result.x).toBe(3);
+        expect(result.y).toBe(7);
     });
 
-    it('Finds all spaces on map with terrain and units', () => {
-        
-        updateMap(DIAGONAL_MAP);
-        units.push(
-            mouseUnit({x: 0, y: 2})
-        )
+    it('fsct2', () => {
+        updateMap(NARROW_MAP);
 
-        const spaces = findFreeSpaceAround({ x: 1, y: 1});
+        console.log(`${JSON.stringify(map)}`);
 
-        expect(spaces.length).toBe(5);
-        expect(spaces).toContainEqual({x: 0, y: 1});
-        expect(spaces).toContainEqual({x: 1, y: 2});
-        expect(spaces).toContainEqual({x: 1, y: 0});
-        expect(spaces).toContainEqual({x: 2, y: 0});
-        expect(spaces).toContainEqual({x: 2, y: 1});
-    });
+        const range = [{"x":1,"y":0,"d":1}];
+        const target = {"x":3,"y":0,"d":1};
+        const visible = [[true,true,true,true]];
 
-    it('Finds all spaces from top left corner', () => {
-        
-        updateMap(CROSS_MAP);
-
-        const spaces = findFreeSpaceAround({ x: 0, y: 0});
-
-        expect(spaces.length).toBe(2);
-        expect(spaces).toContainEqual({x: 0, y: 1});
-        expect(spaces).toContainEqual({x: 1, y: 0});
-    });
-
-    it('Finds all spaces from bottom right corner', () => {
-        
-        updateMap(CROSS_MAP);
-
-        const spaces = findFreeSpaceAround({ x: 2, y: 2});
-
-        expect(spaces.length).toBe(2);
-        expect(spaces).toContainEqual({x: 1, y: 2});
-        expect(spaces).toContainEqual({x: 2, y: 1});
+        const result = findSpaceClosestTo(visible, range, target, {x: 2, y: 7});
+        console.log(`findSpaceClosestTo = ${JSON.stringify(result)}`);
+        expect(result.x).toBe(1);
+        expect(result.y).toBe(0);
     });
 });
 
-describe('findFreeRangeAround', () => {
-    beforeEach(() => {
-        unitsZero();
-    });
-
-    it('Finds all spaces at range 1', () => {
-        
-        updateMap(BIG_MAP);
-
-        const spaces = findRangeAround({x: 2, y: 2}, 1);
-
-        expect(spaces.length).toBe(8);
-    });
-
-    it('Finds all spaces at range 2', () => {
-        
-        updateMap(BIG_MAP);
-
-        const spaces = findRangeAround({x: 2, y: 2}, 2);
-
-        expect(spaces.length).toBe(24);
-    });
-
-    it('Finds all spaces at range 3', () => {
-        
-        updateMap(MAZE_MAP);
-
-        const spaces = findRangeAround({x: 0, y: 2}, 3);
-
-        expect(spaces.length).toBe(5);
-        expect(spaces).toContainEqual({x: 0, y: 1});
-        expect(spaces).toContainEqual({x: 0, y: 0});
-        expect(spaces).toContainEqual({x: 1, y: 0});
-        expect(spaces).toContainEqual({x: 2, y: 0});
-        expect(spaces).toContainEqual({x: 2, y: 1});
-    });
-
-    it('Finds all spaces at range 4', () => {
-        
-        updateMap(MAZE_MAP);
-
-        const spaces = findRangeAround({x: 0, y: 2}, 4);
-
-        expect(spaces.length).toBe(6);
-    });
-});

@@ -1,11 +1,10 @@
 import { Ref, ref } from "vue";
-import { eqXy, xyd } from "../util";
 import { ItemCategory, ItemType, items } from "../items/items";
-import { xy } from "../map";
 import { EffectType, addEffect, clearEffect, findEffectsForSource } from "@/level/effects/effects";
-import { render } from "@/level/canvas";
 import { addStackUnit, removeStackUnit } from "@/level/units/turnStack";
-import { attackUnit, unitAt } from "@/level/units/units";
+import { attackUnit, player, unitAt } from "@/level/units/units";
+import { xy } from "../map/xy";
+import { eqXy } from "../map/util/eqXy";
 
 type FormationCorner = {
     at: xy,
@@ -79,20 +78,22 @@ export const activateFormation = (at: xy) => {
         // add to stack
         console.log(`adding to stack formation: ${formation.title}`);
         addStackUnit({
-            name: formation.title,
+            name: 'Lightning Array',
             at: formation.at,
             energy: 1,
             movement: 1,
             autoMove: () => {
                 console.log('formation\'s turn');
+                player().qi -= 2;
                 const effects = findEffectsForSource(formation.at);
                 for (const effect of effects) {
                     const unitAtEffect = unitAt(effect.at);
                     if (unitAtEffect) {
                         console.log(`attacking unit at ${unitAtEffect.at.x}, ${unitAtEffect.at.y}`);
-                        attackUnit({power: 20}, effect.at);
+                        attackUnit({power: 20, name: 'lightning'}, effect.at);
                     }
                 }
+                return true;
             }
         });
     }

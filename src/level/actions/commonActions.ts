@@ -1,11 +1,12 @@
-import { SpaceCheckerFunction, findRangeAround, xyd } from "@/level/util";
 import { Action } from "./actions";
 import { attackUnit, currentTurnUnit, hasEnemies, player } from "@/level/units/units";
-import { xy } from "@/level/map";
 import { ATTACK_HOVER_COLOUR, CORNER, MOVEMENT_HOVER_COLOUR } from "@/level/constants";
 import { takeItem } from "@/level/items/items";
 import { takeInventoryItem } from "@/level/items/inventory/inventory";
 import { gameOver } from "@/level/gameStatus";
+import { SpaceCheckerFunction, findRangeAround } from "../map/util/findAround";
+import { xy } from "../map/xy";
+import { xyd } from "../map/xyd";
 
 export const WAIT_ACTION: Action = {
     label: 'Wait',
@@ -69,6 +70,6 @@ export const EXIT_LEVEL_ACTION: Action = {
     label: 'Exit Level',
     img: '/exit.png',
     corners: CORNER.SQUARE,
-    perform: () => gameOver(),
+    perform: () => gameOver(`Completed level!`, ''),
     precondition: () => !hasEnemies()
 }

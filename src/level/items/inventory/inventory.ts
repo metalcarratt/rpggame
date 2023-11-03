@@ -2,12 +2,13 @@ import { Ref, ref } from "vue"
 import { Action, clickAction, isCurrentAction } from "../../actions/actions"
 import { ATTACK_HOVER_COLOUR } from "@/level/constants"
 import { currentTurnUnit } from "../../units/units"
-import { SpaceCheckerFunction, xyd } from "@/level/util"
 import { images } from "../../../imageLoader"
 import { ItemCategory, ItemType, PlacedItem, placeItem } from "../items"
 import { WALK_ACTION } from "../../actions/commonActions"
 import { ModalDetails, startModal } from "@/modal/modal"
 import { addFormation, removeFormation, updateFormations } from "../../formations/formations"
+import { xyd } from "@/level/map/xyd"
+import { SpaceCheckerFunction } from "@/level/map/util/findAround"
 
 export type InventoryItem = {
     type: ItemType,
@@ -22,9 +23,8 @@ export class Inventory {
     }
 
     removeItem(item: InventoryItem) {
-        if (item?.quantity > 1) {
-            item.quantity--;
-        } else {
+        item.quantity--;
+        if (item?.quantity <= 0) {
             this.items.splice(this.items.findIndex(_item => _item.type.title === item.type.title), 1);
         }
     }
@@ -78,8 +78,10 @@ const placeInventoryItem = (at: xyd) => {
         
     // }
 
-    selectedInventoryItem.value = null;
-    clickAction(WALK_ACTION);
+    if (!selectedInventoryItem.value || selectedInventoryItem.value.quantity <= 0) {
+        selectedInventoryItem.value = null;
+        clickAction(WALK_ACTION);
+    }
 }
 
 export const takeInventoryItem = (item: PlacedItem) => {
@@ -117,8 +119,10 @@ export const INVENTORY_ACTION: Action = {
     },
     perform: (at) => {
         if (selectedInventoryItem.value?.type.category === ItemCategory.FORMATION) {
-            startModal(PlaceItemModal, at);
-            return;
+            // startModal(PlaceItemModal, at);
+            // return;
+            addFormation('', at, selectedInventoryItem.value.type);
+            placeInventoryItem(at);
         } else {
             placeInventoryItem(at);
         }

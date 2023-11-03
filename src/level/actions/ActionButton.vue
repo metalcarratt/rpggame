@@ -25,7 +25,7 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
     font-size: 16px;
     width: 120px;
     height: 120px;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius: 60px;
     display: flex;
     flex-direction: column;
@@ -34,7 +34,7 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
     background-color: #fcf5bf;
     pointer-events: auto;
 
-    border: solid 5px white;
+    border: solid 2px #6f6262;
     position: relative;
 }
 
@@ -43,7 +43,7 @@ const classes = () => ['action', isCurrentAction(props.action) ? 'selected' : ''
 }
 
 .action.selected {
-    border: solid 5px yellow;
+    border: solid 5px white;
 }
 
 .action:hover {

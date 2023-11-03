@@ -1,10 +1,10 @@
-import { xy } from "@/level/map";
 import { Team, Unit } from "./units";
 import { images } from "@/imageLoader";
 import { RECALL_SPIRIT_FRIEND_ACTION, SUMMON_SPIRIT_FRIEND_ACTION } from "@/level/actions/spiritFriend";
 import { ATTACK_ACTION, EXIT_LEVEL_ACTION, PICK_UP_ACTION, WAIT_ACTION, WALK_ACTION } from "@/level/actions/commonActions";
 import { FORMATION_PLATE, Inventory, LIGHTNING_FLAG } from "@/level/items/inventory/inventory";
 import { IMG_TYPE } from "../constants";
+import { xy } from "../map/xy";
 
 export const PLAYER_NAME = 'Azeena';
 
@@ -39,5 +39,12 @@ export const playerUnit = (at: xy): Unit => ({
         WAIT_ACTION,
         WALK_ACTION,
         EXIT_LEVEL_ACTION
-    ]
+    ],
+    battleDetails: {
+        center: 70,
+        rebound: 100,
+        top: 30,
+        height: 150,
+        image: 'ch.png'
+    }
 });

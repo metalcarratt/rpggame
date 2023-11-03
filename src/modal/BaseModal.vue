@@ -1,5 +1,5 @@
 <template>
-    <div class="matte" v-if="isModalActive()">
+    <ModalMatte>
         <div class="action modal">
             <span class="top-corner" />
             
@@ -7,31 +7,14 @@
 
             <span class="bottom-corner" />
         </div>
-    </div>
+    </ModalMatte>
 </template>
 
 <script setup>
-import { 
-    isModalActive, 
-
-} from './modal';
+import ModalMatte from './ModalMatte.vue';
 </script>
 
 <style>
-.matte {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #aaaa;
-    z-index: 20;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .modal {
     background-color: #3f3d3d;
     padding: 24px;

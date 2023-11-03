@@ -1,11 +1,12 @@
 import { PICK_UP_ACTION } from "../actions/commonActions";
 import { SUMMON_LABEL } from "../actions/spiritFriend";
 import { GuideDirection, GuideType, TargetType } from "../constants";
-import { Inventory } from "../items/inventory/inventory";
+import { FormationStatus, getFormations, hasFormations } from "../formations/formations";
+import { isGameOver } from "../gameStatus";
 import { items } from "../items/items";
 import { SPIDER_BAIT_NAME } from "../items/randomItems";
-import { currentTurnUnit, player, playerTeam, units } from "../units/units";
-import { eqXy } from "../util";
+import { eqXy } from "../map/util/eqXy";
+import { currentTurnUnit, hasEnemies, player, playerTeam, units } from "../units/units";
 import { visible } from "../visibility";
 import { Guide, setGuides } from "./guide";
 
@@ -17,22 +18,22 @@ const PROFILE_READING = 'profile_reading.png';
 export const introDialog = [
     {
         name: NAME,
-        speech: '\'Brrr... It\'s colder in here than I expected.\'',
+        speech: `'Brrr... it's colder in here than I expected.'`,
         profileImg: PROFILE_COLD
     },
     {
         name: NAME,
-        speech: '\'According to the book, there are tens of thousands of these caves hidden in the north-western mountains that encircle the desert.\'',
+        speech: `'According to the book, there are tens of thousands of these caves hidden in the north-western mountains that encircle the desert.'`,
         profileImg: PROFILE_READING
     },
     {
         name: NAME,
-        speech: '\'They are the remains of an ancient civilization that disappeared a long time ago and are now inhabited by monsters.\'',
+        speech: `'They are the remains of an ancient civilization that disappeared a long time ago and are now inhabited by monsters.'`,
         profileImg: PROFILE_READING
     },
     {
         name: NAME,
-        speech: '\'This one should just be the lair of a giant spider though. Even though it\'s tough, with a little bit of skill, I should be able to take it out.\'',
+        speech: `'This one should just be the lair of a giant spider though. Even though it's tough, with a little bit of skill, I should be able to take it out.'`,
         profileImg: PROFILE_IMG
     }
 ]
@@ -41,7 +42,7 @@ const movementGuide = {
     name: 'movement guide',
     type: GuideType.TOOLTIP,
     tooltip: {
-        text: 'Let\'s explore! I can move here!',
+        text: `Let's explore! I can move here!`,
         direction: GuideDirection.LEFT,
         location: {
             top: 290,
@@ -65,12 +66,12 @@ const baitDialog = {
     dialog: [
         {
             name: NAME,
-            speech: '\'Are those dead lizards?\'',
+            speech: `'Are those dead lizards?'`,
             profileImg: PROFILE_IMG
         },
         {
             name: NAME,
-            speech: '\'Apparantly spiders like to eat lizards. Maybe I can use them as bait?\'',
+            speech: `'Apparantly spiders like to eat lizards. Maybe I can use them as bait?'`,
             profileImg: PROFILE_READING
         },
     ],
@@ -99,7 +100,7 @@ const pickupTooltip: Guide = {
     name: 'pickup tooltip',
     type: GuideType.TOOLTIP,
     tooltip: {
-        text: 'Click the \'take\' action and then choose an item to take',
+        text: `Click the 'take' action and then choose an item to take`,
         direction: GuideDirection.BOTTOM,
         location: {
             top: -100,
@@ -119,12 +120,12 @@ const spyDialog = {
     dialog: [
         {
             name: NAME,
-            speech: '\'This place is scary. I shouldn\'t just walk around aimlessly like this.\'',
+            speech: `'This place is scary. I shouldn't just walk around aimlessly like this.'`,
             profileImg: PROFILE_IMG
         },
         {
             name: NAME,
-            speech: '\'I know. I can summon my spirit friend. She\'s a mouse, and whatever she can see, I can see.\'',
+            speech: `'I know. I can summon my spirit friend. She's a mouse, and whatever she can see, I can see.'`,
             profileImg: PROFILE_IMG
         },
     ],
@@ -161,27 +162,97 @@ const spiderDialog = {
     dialog: [
         {
             name: NAME,
-            speech: '\'That\'s the spider! I need to be careful. There\'s no way I could defeat that thing by just charging in.\'',
+            speech: `'That's the spider! I need to be careful. There's no way I could defeat that thing by just charging in.'`,
             profileImg: PROFILE_IMG
         },
         {
             name: NAME,
-            speech: '\'Lucky I bought materials for laying a formation. According to the book, I need to place one formation plate in the center and four lightning flags at each corner.\'',
+            speech: `'Lucky I bought materials for laying a formation. According to the book, I need to place a formation plate in the center of a large area and place a lightning flags at each corner.'`,
             profileImg: PROFILE_READING
         },
         {
             name: NAME,
-            speech: '\'Then I can activate the formation to release deadly lightning. Better not to get hit by that!\'',
+            speech: `'Then I can activate the formation to release deadly lightning. Better not to get hit by that!'`,
             profileImg: PROFILE_READING
         },
         {
             name: NAME,
-            speech: '\'Okay, Azeena! This it it. You can do it!\'',
+            speech: `'Okay! Let's try laying that formation plate somewhere!'`,
             profileImg: PROFILE_IMG
         },
     ],
     ready: spiderVisible,
     finished: () => true
+}
+
+const formationPlateDialog = {
+    name: 'formation plate dialog',
+    type: GuideType.DIALOG,
+    dialog: [
+        {
+            name: NAME,
+            speech: `'I've laid the formation plate. Now I need to put a lightning flag in one of the four corners. It shouldn't matter how far they are as long as they are on the corner...'`,
+            profileImg: PROFILE_READING
+        }
+    ],
+    ready: () => hasFormations(),
+    finished: () => true
+}
+
+const formationCompleteDialog = {
+    name: 'formation plate dialog',
+    type: GuideType.DIALOG,
+    dialog: [
+        {
+            name: NAME,
+            speech: `'The formation is complete. Once I lure the spider here I can activate the formation to zap it.'`,
+            profileImg: PROFILE_READING
+        },
+        {
+            name: NAME,
+            speech: `'Better not stand in range of the formation when it's active..!'`,
+            profileImg: PROFILE_IMG
+        }
+    ],
+    ready: () => hasFormations() && getFormations()[0].status === FormationStatus.IDLE,
+    finished: () => true
+}
+
+const spiderDeadDialog = {
+    name: 'spider dialog',
+    type: GuideType.DIALOG,
+    dialog: [
+        {
+            name: NAME,
+            speech: `'I killed it! I actually killed it! I can't believe I really did it!'`,
+            profileImg: PROFILE_IMG
+        },
+        {
+            name: NAME,
+            speech: `'Phew! Now that's over, I can leave this place once I'm ready'`,
+            profileImg: PROFILE_IMG
+        }
+    ],
+    ready: () => !hasEnemies(),
+    finished: () => true
+}
+
+const exitTooltip: Guide = {
+    name: 'exit tooltip',
+    type: GuideType.TOOLTIP,
+    tooltip: {
+        text: 'Click the \'exit level\' action to leave the cave.',
+        direction: GuideDirection.BOTTOM_RIGHT,
+        location: {
+            top: -100,
+            left: -150
+        },
+        width: 260,
+        target: TargetType.ACTION,
+        targetName: 'Exit Level'
+    },
+    ready: () => !hasEnemies(),
+    finished: () => isGameOver()
 }
 
 export const initGuides = () => {
@@ -192,6 +263,10 @@ export const initGuides = () => {
         pickupTooltip,
         spyDialog,
         spyTooltip,
-        spiderDialog
+        spiderDialog,
+        formationPlateDialog,
+        formationCompleteDialog,
+        spiderDeadDialog,
+        exitTooltip
     ]);
 }

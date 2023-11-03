@@ -1,4 +1,4 @@
-import { xy } from "@/level/map"
+import { xy } from "../map/xy";
 
 export type Effect = {
     at: xy,

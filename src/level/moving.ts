@@ -1,5 +1,5 @@
+import { findRangeAround } from "./map/util/findAround";
 import { currentTurnUnit } from "./units/units";
-import { findRangeAround } from "./util";
 
 export let moveTo: {x: number, y: number}[] = [];
 

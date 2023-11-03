@@ -1,10 +1,10 @@
 import { ref } from "vue";
 import { moveTo } from './moving';
 import { actionAt, getActionAt, performAction } from "@/level/actions/actions";
-import { xy } from "./map";
 import { CELL_SIZE, dpi, getCanvas, offset, render } from "@/level/canvas";
 import { currentTurnUnit, nextUnitTurn } from "@/level/units/units";
 import { guideTick } from "./guide/guide";
+import { xy } from "./map/xy";
 
 export const mouseHover = ref(false);
 export const mouseAt: { x: number, y: number } = { x: -1, y: -1 };

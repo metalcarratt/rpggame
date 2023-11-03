@@ -1,15 +1,14 @@
-import { map, xy } from "./map";
+import { map } from "./map/map";
 import { images } from "../imageLoader";
 import { mapped, visible } from "./visibility";
 import { Unit, currentTurnUnit, units } from "./units/units";
-import { moveTo } from './moving';
 import { actionAt, currentActionColour } from "./actions/actions";
 import { mouseAt, mouseMoveListener } from "./mouseHandler";
-import { CURRENT_UNIT_COLOUR, IMG_TYPE, MOVEMENT_HOVER_COLOUR } from "./constants";
+import { CURRENT_UNIT_COLOUR, IMG_TYPE } from "./constants";
 import { PlacedItem, items } from "./items/items";
 import { Effect, EffectType, effects } from "./effects/effects";
-import { eqXy } from "./util";
-import { PLAYER_NAME } from "./units/playerUnit";
+import { xy } from "./map/xy";
+import { eqXy } from "./map/util/eqXy";
 
 export let dpi = 0;
 export const CELL_SIZE = 100;

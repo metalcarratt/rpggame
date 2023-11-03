@@ -1,6 +1,6 @@
 import { imgData } from "../../imageLoader";
-import { xy } from "../map";
 import { Ref, ref } from 'vue';
+import { xy } from "../map/xy";
 
 export type ItemType = {
     img: imgData,

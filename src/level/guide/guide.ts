@@ -1,6 +1,7 @@
 import { DialogType, setDialog } from "@/dialog/dialog";
 import { Ref, ref } from "vue";
 import { GuideDirection, GuideType, TargetType } from "../constants";
+import { showHelp } from "@/settings";
 
 export type Guide = {
     name: string,
@@ -27,7 +28,7 @@ const guideText: Ref<Guide | undefined> = ref();
 
 export const getGuide = () => guideText.value;
 
-export const hasTooltip = () => guideText.value?.type === GuideType.TOOLTIP && guideText.value?.tooltip;
+export const hasTooltip = () => guideText.value?.type === GuideType.TOOLTIP && guideText.value?.tooltip && showHelp;
 
 export const getTooltip = () => guideText.value?.tooltip;
 

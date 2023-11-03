@@ -1,16 +1,16 @@
 import { Ref, ref } from "vue";
-import { xy } from "@/level/map";
 import { Action } from "@/level/actions/actions";
 import { Inventory } from "@/level/items/inventory/inventory";
+import { xy } from "../map/xy";
 
-interface CanTakeTurn {
+export interface CanTakeTurn {
     name: string,
     at: xy,
     energy: number,
     actions?: Action[],
     movement: number,
     inventory?: Inventory,
-    autoMove?: () => void
+    autoMove?: () => boolean // true means finished
 }
 
 const turnStack: Ref<CanTakeTurn[]> = ref([]);
@@ -29,6 +29,11 @@ export function currentStackUnit() {
     return turnStack.value[turnIndex.value];
 }
 
+export function hasStackUnit(name: string): boolean {
+    const stackIndex = turnStack.value.findIndex(unit => unit.name === name);
+    return stackIndex > 0;
+}
+
 export function removeStackUnit(name: string) {
     console.log(`removing unit ${name}`);
     const stackIndex = turnStack.value.findIndex(unit => unit.name === name);
@@ -36,6 +41,7 @@ export function removeStackUnit(name: string) {
     if (stackIndex > 0) {
         turnStack.value.splice(stackIndex, 1);
     }
+    nextStackUnit();
     console.log(`turn stack: ${JSON.stringify(turnStack.value)}`);
 }
 

@@ -73,4 +73,9 @@ const getStyle = () => `top: ${getTooltip().location.top}px; left: ${getTooltip(
     bottom: -10px;
     left: 40px;
 }
+
+.arrow.bottom-right {
+    right: 40px;
+    bottom: -10px;
+}
 </style>

@@ -1,5 +1,6 @@
 import { guideTick } from "@/level/guide/guide";
 import { introDialog } from "@/level/guide/levelGuides";
+import { showHelp } from "@/settings";
 import { Ref, ref } from "vue";
 
 export type DialogType = {
@@ -16,7 +17,7 @@ let dialogList: DialogType[] = [
     introDialog[3]
 ];
 
-export const hasDialog = (): boolean => dialog.value !== undefined;
+export const hasDialog = (): boolean => dialog.value !== undefined && showHelp;
 
 export const getDialog = () => dialog.value;
 

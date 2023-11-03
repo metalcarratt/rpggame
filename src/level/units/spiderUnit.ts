@@ -1,12 +1,14 @@
-import { xy } from "@/level/map";
 import { Team, Unit, attackUnit, player } from "./units";
 import { images } from "@/imageLoader";
-import { findRangeAround, findSpaceClosestTo, isNextTo } from "@/level/util";
 import { moveCharacter } from "@/level/moving";
 import { findVisibleTo } from "@/level/visibility";
 import { SPIDER_BAIT_NAME } from "@/level/items/randomItems";
 import { items } from "@/level/items/items";
 import { IMG_TYPE } from "../constants";
+import { isNextTo } from "../map/util/isNextTo";
+import { findRangeAround } from "../map/util/findAround";
+import { findSpaceClosestTo } from "../map/util/findSpace";
+import { xy } from "../map/xy";
 
 const attack = (boss: Unit, target: xy) => {
     // console.log('ATTACK!!');
@@ -38,14 +40,17 @@ const identifyTarget = (boss: Unit, visible: boolean[][]) => {
 }
 
 const charge = (boss: Unit, target: xy, visible: boolean[][]) => {
-    const range = findRangeAround(boss.at, boss.movement);
+    const range = findRangeAround(boss.at, 1);
+    // console.log(`range is ${JSON.stringify(range)}`);
+    // console.log(`target is ${JSON.stringify(target)}`);
+    // console.log(`visible is ${JSON.stringify(visible)}`);
     const closest = findSpaceClosestTo(visible, range, target, boss.at);
-    // console.log(`closest is ${closest.x}, ${closest.y}`);
+    console.log(`closest is ${closest.x}, ${closest.y}`);
     if (closest.x === -1 || closest.y === -1) {
-        boss.energy = 0;
+        if (boss.meta) boss.meta.target = null;
         return;
     }
-    // console.log(`CHARGE to ${closest.x}, ${closest.y}`);
+    console.log(`CHARGE from ${boss.at.x}, ${boss.at.y} to ${closest.x}, ${closest.y}`);
     moveCharacter(closest.x, closest.y);
     boss.energy--;
 }
@@ -60,9 +65,10 @@ const idleWalk = (boss: Unit) => {
     boss.energy = 0;
 }
 
-const bossMove = async (boss: Unit) => {
-    while (boss.energy > 0) {
-        const visible = findVisibleTo([boss]);
+const bossMove = (boss: Unit): boolean => {
+    console.log('boss move');
+    // while (boss.energy > 0) {
+        let visible = findVisibleTo([boss]);
         identifyTarget(boss, visible);
         // console.log(`visible: ${JSON.stringify(visible)}`);
         // const playerUnit = player();
@@ -71,19 +77,23 @@ const bossMove = async (boss: Unit) => {
 
             if (isNextTo(boss.at, boss.meta.target)) {
                 // console.log('is next to target');
+                console.log('attacking');
                 attack(boss, boss.meta.target);
             } else {
                 // console.log('moving toward target');
+                console.log('charging');
                 charge(boss, boss.meta.target, visible);
             }
         } else {
             // console.log('has no target');
+            console.log('idling');
             idleWalk(boss);
         }
-    }
+    // }
 
-    const visible = findVisibleTo([boss]);
+    visible = findVisibleTo([boss]);
     identifyTarget(boss, visible);
+    return boss.energy <= 0;
 }
 
 
@@ -106,6 +116,13 @@ export const bossUnit = (at: xy): Unit => ({
         target: null
     },
     autoMove() {
-        bossMove(this);
+        return bossMove(this);
+    },
+    battleDetails: {
+        center: 35,
+        rebound: 55,
+        top: 40,
+        height: 180,
+        image: 'spider2.png'
     }
 });
