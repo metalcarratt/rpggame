@@ -164,30 +164,31 @@ function drawWallImage(btmImg: HTMLImageElement, topImg: HTMLImageElement, at: x
 }
 
 function drawUnit(unit: Unit) {
-    if (visible[unit.at.y][unit.at.x]) {
+    // console.log(`drawing unit ${unit.name} at ${unit.data.at.x}, ${unit.data.at.y}`);
+    if (visible[unit.data.at.y][unit.data.at.x]) {
         if (unit.imgType === IMG_TYPE.STANDING) {
-            drawStandingImage(unit.img.img as HTMLImageElement, unit.at);
+            drawStandingImage(images[unit.img].img as HTMLImageElement, unit.data.at);
         } else if (unit.imgType == IMG_TYPE.OVERSIZED) {
-            drawOversiedImage(unit.img.img as HTMLImageElement, unit.at);
+            drawOversiedImage(images[unit.img].img as HTMLImageElement, unit.data.at);
         } else {
-            drawImage(unit.img.img as HTMLImageElement, unit.at);
+            drawImage(images[unit.img].img as HTMLImageElement, unit.data.at);
         }
     
     
         const canvas = getCanvas();
         const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        const x = (unit.at.x - offset.x) * CELL_SIZE;
-        const y = (unit.at.y - offset.y) * CELL_SIZE;
+        const x = (unit.data.at.x - offset.x) * CELL_SIZE;
+        const y = (unit.data.at.y - offset.y) * CELL_SIZE;
         ctx.font = "25px Arial";
 
         ctx.fillStyle = "white";
-        ctx.fillText(`${unit.armour}`, x + CELL_SIZE - 90, y + CELL_SIZE);
+        ctx.fillText(`${unit.data.armour}`, x + CELL_SIZE - 90, y + CELL_SIZE);
 
         ctx.fillStyle = "red";
-        ctx.fillText(`${unit.hp}`, x + CELL_SIZE - 55, y + CELL_SIZE);
+        ctx.fillText(`${unit.data.hp}`, x + CELL_SIZE - 55, y + CELL_SIZE);
 
         ctx.fillStyle = "yellow";
-        ctx.fillText(`${unit.qi}`, x + CELL_SIZE - 30, y + CELL_SIZE);
+        ctx.fillText(`${unit.data.qi}`, x + CELL_SIZE - 30, y + CELL_SIZE);
     }
 }
 
@@ -238,11 +239,11 @@ function drawCell(ctx: CanvasRenderingContext2D, at: xy) {
 }
 
 function drawCurrentUnitBg(ctx: CanvasRenderingContext2D, at: xy) {
-    if (eqXy(currentTurnUnit().at, at)) {
+    if (eqXy(currentTurnUnit.value?.data.at, at)) {
         ctx.fillStyle = CURRENT_UNIT_COLOUR;
         ctx.fillRect(
-            (currentTurnUnit().at.x - offset.x) * CELL_SIZE,
-            (currentTurnUnit().at.y - offset.y) * CELL_SIZE,
+            (currentTurnUnit.value.data.at.x - offset.x) * CELL_SIZE,
+            (currentTurnUnit.value.data.at.y - offset.y) * CELL_SIZE,
             CELL_SIZE,
             CELL_SIZE
         );
@@ -250,7 +251,7 @@ function drawCurrentUnitBg(ctx: CanvasRenderingContext2D, at: xy) {
 }
 
 function drawUnits(at: xy) {
-    const unit = units.find(unit => eqXy(unit.at, at));
+    const unit = units.value.find(unit => eqXy(unit.data.at, at));
     // for (const unit of units) {
     if (unit) {
         drawUnit(unit);

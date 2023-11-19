@@ -15,16 +15,16 @@ export enum SpaceCheckerFunction {
 export const EMPTY_SPACE_CHECKER = (at: xy) => {
     // console.log('in empty space checeer');
         return map[at.y][at.x] === 0
-        && !(units.some(unit => eqXy(unit.at, at)))};
+        && !(units.value.some(unit => eqXy(unit.data.at, at)))};
     
 export const ENEMY_UNIT_CHECKER = (at: xy) => {
         // console.log('in enemy unit checker');
         return map[at.y][at.x] === 0
-        && units.some(unit => eqXy(unit.at, at) && unit.team === Team.MONSTER)};
+        && units.value.some(unit => eqXy(unit.data.at, at) && unit.team === Team.MONSTER)};
 
 export const WALL_CHECKER = (at: xy) =>
         map[at.y][at.x] !== 0
-        && !(units.some(unit => eqXy(unit.at, at)));
+        && !(units.value.some(unit => eqXy(unit.data.at, at)));
 
 export const ITEM_CHECKER = (at: xy) => 
         items().some(item => item.at.x === at.x && item.at.y === at.y);

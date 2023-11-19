@@ -4,12 +4,13 @@
             <h1>Game Over</h1>
             <span class="message">{{ gameOverMsg() }}</span>
             <img :src="gameOverImg()" />
-            
         </div>
+        <ListOfSaves />
     </div>
 </template>
 
 <script setup>
+import ListOfSaves from '../progress/ListOfSaves.vue';
 import { isGameOver, gameOverMsg, gameOverImg } from '@/level/gameStatus';
 import { isInBattle } from '@/level/battle/battle';
 </script>

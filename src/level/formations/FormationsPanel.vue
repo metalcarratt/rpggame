@@ -3,7 +3,7 @@
         <span class="item" v-for="(formation, index) in getFormations()" :key="index">
             {{ formation.title }}
             <span :class="['image', formation.status]">
-                <img :src="formation.type.img.img.src" />
+                <img :src="formationImg(formation)" />
                 <span :class="['corner', 'TL', formation.corners.TL?.dist > 0 ? 'active' : '']">{{ formation.corners.TL?.dist }}</span>
                 <span :class="['corner', 'TR', formation.corners.TR?.dist > 0 ? 'active' : '']">{{ formation.corners.TR?.dist }}</span>
                 <span :class="['corner', 'BL', formation.corners.BL?.dist > 0 ? 'active' : '']">{{ formation.corners.BL?.dist }}</span>
@@ -21,6 +21,9 @@
 
 <script setup>
 import { hasFormations, getFormations, FormationStatus, activateFormation, deactivateFormation } from './formations';
+import { typeLookup } from '../items/itemTypes';
+
+const formationImg = (formation) => typeLookup[formation.type].img.img.src
 </script>
 
 <style scoped>

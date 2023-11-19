@@ -2,38 +2,22 @@
     <ul id="turnStack">
         <template v-for="(unit, i) in units()" :key="i">
             <UnitProfile 
-                v-if="selected(unit)" 
+                v-if="visible[unit.data.at.y][unit.data.at.x]" 
                 :unit="unit" 
-                :selected="true" 
+                :selected="selected(unit)"
             />
-            <!-- <li class="selected" v-if="selected(unit)">
-                <img class="profile" v-if="unit.profileImg" :src="unit.profileImg" />
-                {{ unit.name }}
-            </li> -->
-            <UnitProfile 
-                v-else-if="visible[unit.at.y][unit.at.x]" 
-                :unit="unit" 
-                :selected="false"
-            />
-            <!-- <li v-if="visible[unit.at.y][unit.at.x]">
-                <img class="profile" v-if="unit.profileImg" :src="unit.profileImg" />
-                {{  unit.name }}
-            </li> -->
         </template>
     </ul>
 </template>
 
 <script setup>
 import { visible } from '../visibility';
-import { getStack } from './turnStack';
-import { currentTurnUnit } from './units';
-import UnitProfile from './UnitProfile.vue';
-const units = () => {
-    // console.log(turnStack.value);
-    return getStack();
-}
+import { getStackUnits } from './turnStack';
+import { currentTurnUnit } from '../units/units';
+import UnitProfile from '../units/UnitProfile.vue';
 
-const selected = (unit) => currentTurnUnit().name === unit.name;
+const units = () => getStackUnits();
+const selected = (unit) => currentTurnUnit.value?.name === unit.name;
 </script>
 
 <style scoped>

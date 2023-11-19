@@ -40,7 +40,7 @@ export const images = {
     profileImg: initImg(),
     profileCold: initImg(),
     profileReading: initImg()
-}
+} as Record<string, imgData>
 
 
 const checkLoaded = () => {

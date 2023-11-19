@@ -35,3 +35,11 @@ export const clearEffect = (source: xy) => {
 
 export const findEffectsForSource = (source: xy) => 
     effects.filter(effect => effect.source.x === source.x && effect.source.y === source.y);
+
+export const saveEffects = () => {
+    return JSON.stringify(effects);
+}
+
+export const restoreEffects = (savedEffects: string) => {
+    effects = JSON.parse(savedEffects);
+}

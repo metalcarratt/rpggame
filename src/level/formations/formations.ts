@@ -1,10 +1,11 @@
 import { Ref, ref } from "vue";
-import { ItemCategory, ItemType, items } from "../items/items";
+import { items } from "../items/items";
 import { EffectType, addEffect, clearEffect, findEffectsForSource } from "@/level/effects/effects";
-import { addStackUnit, removeStackUnit } from "@/level/units/turnStack";
+import { CanTakeTurn, addStackUnit, removeStackUnitKeepCurrent } from "@/level/turn-stack/turnStack";
 import { attackUnit, player, unitAt } from "@/level/units/units";
 import { xy } from "../map/xy";
 import { eqXy } from "../map/util/eqXy";
+import { ItemCategory } from "../items/itemTypes";
 
 type FormationCorner = {
     at: xy,
@@ -20,10 +21,11 @@ type FormationCorners = {
 
 export type Formation = {
     title: string,
-    type: ItemType,
+    type: string,
     at: xy,
     corners: FormationCorners,
-    status: FormationStatus
+    status: FormationStatus,
+    unit?: CanTakeTurn
 }
 
 export enum FormationStatus {
@@ -32,9 +34,34 @@ export enum FormationStatus {
     ALIVE = 'Alive'
 }
 
+export const formationUnit = (at: xy, title: string): CanTakeTurn => ({
+    name: title,
+    data: {
+        at,
+        energy: 1
+    },
+    movement: 1,
+    autoMove: () => {
+        console.log('formation\'s turn');
+        player().data.qi -= 2;
+        const effects = findEffectsForSource(at);
+        for (const effect of effects) {
+            const unitAtEffect = unitAt(effect.at);
+            if (unitAtEffect) {
+                console.log(`attacking unit at ${unitAtEffect.data.at.x}, ${unitAtEffect.data.at.y}`);
+                attackUnit({power: 20, name: 'lightning'}, effect.at);
+            }
+        }
+        return true;
+    },
+    actions: []
+});
+
 const formations: Ref<Formation[]> = ref([]);
 
-export const addFormation = (title: string, at: xy, type: ItemType) => {
+export const findFormationUnit = (name: string) => formations.value.find(formation => formation.title === name);
+
+export const addFormation = (title: string, at: xy, type: string) => {
     const newFormation: Formation = {
         title,
         at,
@@ -77,25 +104,10 @@ export const activateFormation = (at: xy) => {
         applyEffects(formation);
         // add to stack
         console.log(`adding to stack formation: ${formation.title}`);
-        addStackUnit({
-            name: 'Lightning Array',
-            at: formation.at,
-            energy: 1,
-            movement: 1,
-            autoMove: () => {
-                console.log('formation\'s turn');
-                player().qi -= 2;
-                const effects = findEffectsForSource(formation.at);
-                for (const effect of effects) {
-                    const unitAtEffect = unitAt(effect.at);
-                    if (unitAtEffect) {
-                        console.log(`attacking unit at ${unitAtEffect.at.x}, ${unitAtEffect.at.y}`);
-                        attackUnit({power: 20, name: 'lightning'}, effect.at);
-                    }
-                }
-                return true;
-            }
-        });
+        
+        const unit = formationUnit(at, formation.title);
+        formation.unit = unit;
+        addStackUnit(unit);
     }
 }
 
@@ -171,7 +183,7 @@ export const deactivateFormation = (at: xy) => {
 
         if (formation) {
             console.log(`removing from stack formation: ${formation.title}`);
-            removeStackUnit(formation.title);
+            removeStackUnitKeepCurrent(formation.title);
         }
     }
 }
@@ -207,4 +219,39 @@ const checkFormationCorners = (at: xy): FormationCorners => {
     }
 
     return corners;
+}
+
+export const saveFormations = () => {
+    const savedState = formations.value.map(({
+        title,
+        type,
+        at,
+        corners,
+        status,
+    }) => ({
+        title,
+        type,
+        at,
+        corners,
+        status
+    }));
+    return JSON.stringify(savedState);
+}
+
+export const restoreFormations = (savedFormations: string) => {
+    const savedState = JSON.parse(savedFormations) as any[];
+    formations.value = savedState.map(({
+        title,
+        type,
+        at,
+        corners,
+        status
+    }) => ({
+        title,
+        type,
+        at,
+        corners,
+        status,
+        unit: formationUnit(at, title)
+    }));
 }

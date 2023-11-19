@@ -25,5 +25,12 @@ export function initCharacter() {
 
 export function updateMap(newMap: number[][]) {
     map = newMap;
-    
+}
+
+export function saveMap() {
+    return JSON.stringify(map);
+}
+
+export function restoreMap(savedMap: string) {
+    map = JSON.parse(savedMap);
 }

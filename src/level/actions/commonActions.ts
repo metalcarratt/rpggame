@@ -13,7 +13,7 @@ export const WAIT_ACTION: Action = {
     label: 'Wait',
     img: IMG_WAITING,
     perform: () => {
-        currentTurnUnit().energy = 0;
+        currentTurnUnit.value.data.energy = 0;
     },
     precondition: () => true
 }
@@ -29,7 +29,7 @@ export const ATTACK_ACTION: Action = {
     perform: (at: xy) => {
         const playerUnit = player();
         attackUnit(playerUnit, at);
-        currentTurnUnit().energy = 0;
+        currentTurnUnit.value.data.energy = 0;
     },
     precondition: () => true
 }
@@ -38,14 +38,14 @@ export const WALK_ACTION: Action = {
     label: 'Walk',
     img: IMG_WALKING,
     range: {
-        range: () => currentTurnUnit().energy,
+        range: () => currentTurnUnit.value.data.energy,
         validator: SpaceCheckerFunction.EMPTY_SPACE,
         colour: MOVEMENT_HOVER_COLOUR
     },
     perform: (at: xyd) => {
-        // console.log(`walking to ${at.x}, ${at.y} with d=${at.d}`);
-        currentTurnUnit().at = JSON.parse(JSON.stringify(at));
-        currentTurnUnit().energy -= at.d;
+        console.log(`walking to ${at.x}, ${at.y} with d=${at.d}`);
+        currentTurnUnit.value.data.at = JSON.parse(JSON.stringify(at));
+        currentTurnUnit.value.data.energy -= at.d;
     },
     precondition: () => true
 }
@@ -63,7 +63,7 @@ export const PICK_UP_ACTION: Action = {
         takeInventoryItem(item);
     },
     precondition: () => {
-        return findRangeAround(currentTurnUnit().at, 1, SpaceCheckerFunction.ITEM).length > 0;
+        return findRangeAround(currentTurnUnit.value.data.at, 1, SpaceCheckerFunction.ITEM).length > 0;
     }
 }
 

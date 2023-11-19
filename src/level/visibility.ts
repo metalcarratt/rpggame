@@ -3,7 +3,7 @@ import { xy } from "./map/xy";
 import { Unit, playerTeam } from "./units/units";
 
 export let visible: boolean[][] = [];
-export const mapped: boolean[][] = [];
+export let mapped: boolean[][] = [];
 
 export function initVisibility() {
     for (let y = 0; y < map.length; y++) {
@@ -32,14 +32,14 @@ export function findVisibleTo(units: Unit[], player: boolean = false): boolean[]
     for (const unit of units) {
     //     console.log(`_visible: ${JSON.stringify(_visible)}`);
     // console.log(`x: ${unit.x}. y: ${unit.y}`)
-        followRight(unit.at, _visible, player);
-        followLeft(unit.at, _visible, player);
-        followUp(unit.at, _visible, player);
-        followDown(unit.at, _visible, player);
-        followUpLeft(unit.at, _visible, player);
-        followDownRight(unit.at, _visible, player);
-        followUpRight(unit.at, _visible, player);
-        followDownLeft(unit.at, _visible, player);
+        followRight(unit.data.at, _visible, player);
+        followLeft(unit.data.at, _visible, player);
+        followUp(unit.data.at, _visible, player);
+        followDown(unit.data.at, _visible, player);
+        followUpLeft(unit.data.at, _visible, player);
+        followDownRight(unit.data.at, _visible, player);
+        followUpRight(unit.data.at, _visible, player);
+        followDownLeft(unit.data.at, _visible, player);
     }
 
     return _visible;
@@ -157,4 +157,14 @@ function followDownLeft(from: xy, _visible: boolean[][], player: boolean) {
         _visible[y][x] = true;
         if (player) mapped[y][x] = true;
     }
+}
+
+export const saveMapped = () => {
+    return JSON.stringify({mapped, visible});
+}
+
+export const restoreMapped = (savedMapped: string) => {
+    const restore = JSON.parse(savedMapped) as any;
+    mapped = restore.mapped;
+    visible = restore.visible;
 }

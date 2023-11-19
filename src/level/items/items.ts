@@ -1,17 +1,10 @@
-import { imgData } from "../../imageLoader";
 import { Ref, ref } from 'vue';
 import { xy } from "../map/xy";
+import { ItemType, typeLookup } from "./itemTypes";
 
-export type ItemType = {
-    img: imgData,
-    title: string,
-    category: ItemCategory
-}
-
-export enum ItemCategory {
-    NORMAL,
-    FORMATION,
-    FLAG
+type StoredItem = {
+    type: string,
+    at: xy
 }
 
 export type PlacedItem = {
@@ -19,17 +12,32 @@ export type PlacedItem = {
     at: xy
 }
 
-const _items: Ref<PlacedItem[]> = ref([]);
+const _items: Ref<StoredItem[]> = ref([]);
 
-export const items = () => _items.value;
+const mapStoredToPlacedItem =(item: StoredItem) => ({
+    type: typeLookup[item.type],
+    at: item.at
+})
 
-export const placeItem = (item: ItemType, at: xy) => {
+export const items = (): PlacedItem[] => _items.value.map(mapStoredToPlacedItem);
+
+export const placeItem = (type: string, at: xy) => {
     _items.value.push({
-        type: item,
+        type,
         at
     });
 }
 
 export const takeItem = (at: xy) => {
-    return _items.value.splice(_items.value.findIndex(item => item.at.x === at.x && item.at.y === at.y), 1)[0];
+    return _items.value
+        .splice(_items.value.findIndex(item => item.at.x === at.x && item.at.y === at.y), 1)
+        .map(mapStoredToPlacedItem)[0];
+}
+
+export const saveItems = () => {
+    return JSON.stringify(_items.value);
+}
+
+export const restoreItems = (savedItems: string) => {
+    _items.value = JSON.parse(savedItems);
 }

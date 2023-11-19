@@ -2,12 +2,12 @@ import { Ref, ref } from "vue";
 import { render } from "../canvas";
 import { clearMoveTo } from "../moving";
 import { currentTurnUnit, nextUnitTurn } from "../units/units";
-import { WALK_ACTION } from "./commonActions";
+import { PICK_UP_ACTION, WALK_ACTION } from "./commonActions";
 import { findPlayerVisible } from "@/level/visibility";
 import { CORNER } from "@/level/constants";
 import { SpaceCheckerFunction, findRangeAround } from "../map/util/findAround";
 import { xyd } from "../map/xyd";
-import { gameOver, isGameOver } from "../gameStatus";
+import { isGameOver } from "../gameStatus";
 
 export type ActionRange = {
     range: number | (() => number),
@@ -45,14 +45,14 @@ export const clickAction = (action: Action) => {
     if (action.range) {
         // console.log(`action.range, action=${JSON.stringify(action)}, rangeValidator=${JSON.stringify(action?.range.validator)}`);
         const range = typeof action.range.range === 'number' ? action.range.range : action.range.range();
-        actionAt = findRangeAround(currentTurnUnit().at, range, action?.range.validator ?? SpaceCheckerFunction.EMPTY_SPACE);
+        actionAt = findRangeAround(currentTurnUnit.value.data.at, range, action?.range.validator ?? SpaceCheckerFunction.EMPTY_SPACE);
         currentAction.value = action;
         render();
     } else {
         currentAction.value = action;
         performAction({x:0, y:0, d:0});
-        console.log(`unit has ${currentTurnUnit().energy} remaining`);
-        if (currentTurnUnit().energy < 1) {
+        console.log(`unit has ${currentTurnUnit.value.data.energy} remaining`);
+        if (currentTurnUnit.value.data.energy < 1) {
             console.log('no energy left, next unit turn');
             nextUnitTurn();
         } 
@@ -62,7 +62,7 @@ export const clickAction = (action: Action) => {
 
 export const performAction = (at: xyd) => {
     currentAction.value.perform(at);
-    if (!currentAction.value.precondition() || currentTurnUnit().energy <= 0 || isGameOver()) {
+    if (!currentAction.value.precondition() || currentTurnUnit.value.data.energy <= 0 || isGameOver()) {
         currentAction.value = WALK_ACTION;
     }
     
@@ -71,6 +71,6 @@ export const performAction = (at: xyd) => {
 }
 
 export function getCurrentActions(): Action[] {
-    const unit = currentTurnUnit();
+    const unit = currentTurnUnit.value;
     return unit.actions?.filter(action => action.precondition()) ?? [];
 }

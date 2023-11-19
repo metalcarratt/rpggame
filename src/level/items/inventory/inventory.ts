@@ -2,40 +2,52 @@ import { Ref, ref } from "vue"
 import { Action, clickAction, isCurrentAction } from "../../actions/actions"
 import { ATTACK_HOVER_COLOUR } from "@/level/constants"
 import { currentTurnUnit } from "../../units/units"
-import { images } from "../../../imageLoader"
-import { ItemCategory, ItemType, PlacedItem, placeItem } from "../items"
+import { PlacedItem, placeItem } from "../items"
 import { WALK_ACTION } from "../../actions/commonActions"
-import { ModalDetails, startModal } from "@/modal/modal"
-import { addFormation, removeFormation, updateFormations } from "../../formations/formations"
+import { addFormation, getFormations, removeFormation, updateFormations } from "../../formations/formations"
 import { xyd } from "@/level/map/xyd"
 import { SpaceCheckerFunction } from "@/level/map/util/findAround"
+import { FORMATION_PLATE, ItemCategory, LIGHTNING_FLAG } from "../itemTypes"
+
+const selectedInventoryItem: Ref<null | string> = ref(null);
 
 export type InventoryItem = {
-    type: ItemType,
+    type: string,
     quantity: number
 }
 
 export class Inventory {
-    items: InventoryItem[] = [];
+    private items: InventoryItem[] = [];
 
     constructor(inItems: InventoryItem[]) {
         this.items = inItems;
     }
 
-    removeItem(item: InventoryItem) {
-        item.quantity--;
-        if (item?.quantity <= 0) {
-            this.items.splice(this.items.findIndex(_item => _item.type.title === item.type.title), 1);
+    removeItem(type: string) {
+        const foundItem = this.findItem(type);
+        if (foundItem) {
+            foundItem.quantity--;
+            if (foundItem?.quantity <= 0) {
+                this.items.splice(this.items.findIndex(_item => _item.type === type), 1);
+            }
         }
     }
 
-    addItem(item: ItemType) {
-        const foundItem = this.items.find(_item => _item.type.title === item.title);
+    findItem(type: string) {
+        return this.items.find(_item => _item.type === type);
+    }
+
+    quantity(type: string) {
+        return this.findItem(type)?.quantity ?? 0;
+    }
+
+    addItem(type: string) {
+        const foundItem = this.findItem(type);
         if (foundItem) {
             foundItem.quantity++;
         } else {
             this.items.push({
-                type: item,
+                type,
                 quantity: 1
             })
         }
@@ -46,17 +58,7 @@ export class Inventory {
     }
 }
 
-export const LIGHTNING_FLAG: ItemType = {
-    img: images.lightningFlag,
-    title: 'Lightning Flag',
-    category: ItemCategory.FLAG
-}
 
-export const FORMATION_PLATE: ItemType = {
-    img: images.formationPlate,
-    title: 'Formation Plate',
-    category: ItemCategory.FORMATION
-}
 
 const placeInventoryItem = (at: xyd) => {
     console.log(`perform action inventory`);
@@ -67,10 +69,10 @@ const placeInventoryItem = (at: xyd) => {
     //     selectedInventoryItem.value.quantity--;
     // }
     if (selectedInventoryItem.value) {
-        currentTurnUnit().inventory?.removeItem(selectedInventoryItem.value);
-        placeItem(selectedInventoryItem.value.type, at);
+        currentTurnUnit.value?.inventory?.removeItem(selectedInventoryItem.value);
+        placeItem(selectedInventoryItem.value, at);
 
-        if (selectedInventoryItem.value.type.category === ItemCategory.FLAG) {
+        if (selectedInventoryItem.value === LIGHTNING_FLAG) {
             updateFormations();
         }
     }
@@ -78,14 +80,14 @@ const placeInventoryItem = (at: xyd) => {
         
     // }
 
-    if (!selectedInventoryItem.value || selectedInventoryItem.value.quantity <= 0) {
+    if (!selectedInventoryItem.value || (currentTurnUnit.value?.inventory?.quantity(selectedInventoryItem.value) ?? 0) <= 0) {
         selectedInventoryItem.value = null;
         clickAction(WALK_ACTION);
     }
 }
 
 export const takeInventoryItem = (item: PlacedItem) => {
-    currentTurnUnit().inventory?.addItem(item.type);
+    currentTurnUnit.value?.inventory?.addItem(item.type.title);
     if (item.type.category === ItemCategory.FORMATION) {
         removeFormation(item.at);
     } else if (item.type.category === ItemCategory.FLAG) {
@@ -93,21 +95,21 @@ export const takeInventoryItem = (item: PlacedItem) => {
     }
 }
 
-const PlaceItemModal: ModalDetails = {
-    inputs: [
-        {
-            title: 'Formation Name:',
-            name: 'name',
-            value: ''
-        }
-    ],
-    title: () => `Place ${selectedInventoryItem.value?.type.title}`,
-    onSubmit: (at, inputs) => {
-        const item = selectedInventoryItem.value as InventoryItem;
-        placeInventoryItem(at);
-        addFormation(inputs[0].value, at, item.type);
-    }
-}
+// const PlaceItemModal: ModalDetails = {
+//     inputs: [
+//         {
+//             title: 'Formation Name:',
+//             name: 'name',
+//             value: ''
+//         }
+//     ],
+//     title: () => `Place ${selectedInventoryItem.value?.type.title}`,
+//     onSubmit: (at, inputs) => {
+//         const item = selectedInventoryItem.value as InventoryItem;
+//         placeInventoryItem(at);
+//         addFormation(inputs[0].value, at, item.type);
+//     }
+// }
 
 export const INVENTORY_ACTION: Action = {
     label: 'Inventory',
@@ -118,10 +120,10 @@ export const INVENTORY_ACTION: Action = {
         colour: ATTACK_HOVER_COLOUR
     },
     perform: (at) => {
-        if (selectedInventoryItem.value?.type.category === ItemCategory.FORMATION) {
+        if (selectedInventoryItem.value === FORMATION_PLATE) {
             // startModal(PlaceItemModal, at);
             // return;
-            addFormation('', at, selectedInventoryItem.value.type);
+            addFormation(`Formation ${getFormations().length + 1}`, at, FORMATION_PLATE);
             placeInventoryItem(at);
         } else {
             placeInventoryItem(at);
@@ -130,14 +132,14 @@ export const INVENTORY_ACTION: Action = {
     precondition: () => true,
 }
 
-const selectedInventoryItem: Ref<null | InventoryItem> = ref(null);
+
 
 export const isSelectedInventoryItem = (item: InventoryItem): boolean => 
     isCurrentAction(INVENTORY_ACTION)
-    && item.type.title === selectedInventoryItem.value?.type.title;
+    && item.type === selectedInventoryItem.value;
 
 export const clickInventory = (item: InventoryItem) => {
-    console.log(`click inventory item ${item.type.title}`);
-    selectedInventoryItem.value = item;
+    console.log(`click inventory item ${item.type}`);
+    selectedInventoryItem.value = item.type;
     clickAction(INVENTORY_ACTION);
 }

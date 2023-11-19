@@ -53,7 +53,7 @@ describe('findFreeSpaceAround', () => {
     it('Finds all spaces on map with terrain and units', () => {
         
         updateMap(DIAGONAL_MAP);
-        units.push(
+        units.value.push(
             mouseUnit({x: 0, y: 2})
         )
 

@@ -27,3 +27,8 @@ export const gameOver = (message: string, type: string) => {
 
 export const isGameOver = () => status.value === GameStatus.GAME_OVER;
 
+export const restoreGameStatus = () => {
+    status.value = GameStatus.IN_PROGRESS;
+    gameOverMessage.value = '';
+    gameOverImage.value = '';
+}

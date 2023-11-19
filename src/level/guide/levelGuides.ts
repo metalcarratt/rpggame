@@ -1,14 +1,7 @@
 import { IMG_PROFILE_COLD, IMG_PROFILE_IMG, IMG_PROFILE_READING } from "@/imageLoader";
-import { PICK_UP_ACTION } from "../actions/commonActions";
 import { SUMMON_LABEL } from "../actions/spiritFriend";
 import { GuideDirection, GuideType, TargetType } from "../constants";
-import { FormationStatus, getFormations, hasFormations } from "../formations/formations";
-import { isGameOver } from "../gameStatus";
-import { items } from "../items/items";
-import { SPIDER_BAIT_NAME } from "../items/randomItems";
-import { eqXy } from "../map/util/eqXy";
-import { currentTurnUnit, hasEnemies, player, playerTeam, units } from "../units/units";
-import { visible } from "../visibility";
+
 import { Guide, setGuides } from "./guide";
 
 const NAME = 'Azeena';
@@ -50,13 +43,8 @@ const movementGuide = {
         targetName: TargetType.CANVAS
     },
     ready: () => true,
-    finished: () => !eqXy(player().at, {x: 0, y: 4})
-};
-
-const baitVisible = () => items().some(item => 
-    item.type.title === SPIDER_BAIT_NAME
-    && visible[item.at.y][item.at.x]
-)
+    finished: (gs) => !gs.u.eqXy(gs.player.data.at, {x: 0, y: 4})
+} as Guide;
 
 const baitDialog = {
     name: 'bait dialog',
@@ -73,9 +61,9 @@ const baitDialog = {
             profileImg: IMG_PROFILE_READING
         },
     ],
-    ready: baitVisible,
+    ready: (gs) => gs.u.itemVisible(gs.c['SPIDER_BAIT']),
     finished: () => true
-}
+} as Guide;
 
 const baitTooltip = {
     name: 'bait tooltip',
@@ -90,9 +78,9 @@ const baitTooltip = {
         target: TargetType.CANVAS,
         targetName: TargetType.CANVAS
     },
-    ready: baitVisible,
-    finished: PICK_UP_ACTION.precondition
-}
+    ready: (gs) => gs.u.itemVisible(gs.c['SPIDER_BAIT']),
+    finished: (gs) => gs.c["PICK_UP_ACTION"]?.precondition ?? false
+} as Guide;
 
 const pickupTooltip: Guide = {
     name: 'pickup tooltip',
@@ -108,9 +96,9 @@ const pickupTooltip: Guide = {
         target: TargetType.ACTION,
         targetName: 'Pick Up'
     },
-    ready: PICK_UP_ACTION.precondition,
-    finished: () => currentTurnUnit()?.inventory?.items.some(item => item.type.title === SPIDER_BAIT_NAME) ?? false
-}
+    ready: (gs) => gs.c["PICK_UP_ACTION"]?.precondition ?? false,
+    finished: (gs) => (gs.currentTurnUnit?.inventory?.quantity('Spider Bait') ?? 0) > 0 ?? false
+} as Guide;
 
 const spyDialog = {
     name: 'spy dialog',
@@ -127,9 +115,9 @@ const spyDialog = {
             profileImg: IMG_PROFILE_IMG
         },
     ],
-    ready: () => currentTurnUnit().at.x >= 4,
+    ready: (gs) => gs.currentTurnUnit.data.at.x >= 4,
     finished: () => true
-}
+} as Guide;
 
 const spyTooltip: Guide = {
     name: 'spy tooltip',
@@ -145,14 +133,9 @@ const spyTooltip: Guide = {
         target: TargetType.ACTION,
         targetName: SUMMON_LABEL
     },
-    ready: () => currentTurnUnit().at.x >= 4,
-    finished: () => playerTeam().some(unit => unit.name === 'Mouse')
-}
-
-const spiderVisible = () => units.some(unit => 
-    unit.name === 'Turqoise Spider'
-    && visible[unit.at.y][unit.at.x]
-)
+    ready: (ga) => ga.currentTurnUnit.data.at.x >= 4,
+    finished: (gs) => gs.playerTeam.some(unit => unit.name === 'Mouse')
+} as Guide;
 
 const spiderDialog = {
     name: 'spider dialog',
@@ -179,9 +162,9 @@ const spiderDialog = {
             profileImg: IMG_PROFILE_IMG
         },
     ],
-    ready: spiderVisible,
+    ready: (gs) => gs.u.unitVisible('Turqoise Spider'),
     finished: () => true
-}
+} as Guide;
 
 const formationPlateDialog = {
     name: 'formation plate dialog',
@@ -193,9 +176,9 @@ const formationPlateDialog = {
             profileImg: IMG_PROFILE_READING
         }
     ],
-    ready: () => hasFormations(),
+    ready: (gs) => gs.u.hasFormations(),
     finished: () => true
-}
+} as Guide;
 
 const formationCompleteDialog = {
     name: 'formation plate dialog',
@@ -212,9 +195,9 @@ const formationCompleteDialog = {
             profileImg: IMG_PROFILE_IMG
         }
     ],
-    ready: () => hasFormations() && getFormations()[0].status === FormationStatus.IDLE,
+    ready: (gs) => gs.u.hasFormations() && gs.u.getFormations()[0].status === "Idle",
     finished: () => true
-}
+} as Guide;
 
 const spiderDeadDialog = {
     name: 'spider dialog',
@@ -231,9 +214,9 @@ const spiderDeadDialog = {
             profileImg: IMG_PROFILE_IMG
         }
     ],
-    ready: () => !hasEnemies(),
+    ready: (gs) => !gs.u.hasEnemies(),
     finished: () => true
-}
+} as Guide;
 
 const exitTooltip: Guide = {
     name: 'exit tooltip',
@@ -249,9 +232,9 @@ const exitTooltip: Guide = {
         target: TargetType.ACTION,
         targetName: 'Exit Level'
     },
-    ready: () => !hasEnemies(),
-    finished: () => isGameOver()
-}
+    ready: (gs) => !gs.u.hasEnemies(),
+    finished: (gs) => gs.u.isGameOver()
+} as Guide;
 
 export const initGuides = () => {
     setGuides([

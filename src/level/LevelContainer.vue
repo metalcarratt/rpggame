@@ -16,7 +16,7 @@
 
 <script setup>
 import GameHud from './components/GameHud.vue';
-import TurnStack from './units/TurnStack.vue';
+import TurnStack from './turn-stack/TurnStack.vue';
 import ActionButtons from './actions/ActionButtons.vue';
 import GameOver from './components/GameOver.vue';
 import ActionModal from './actions/ActionModal.vue';
@@ -27,9 +27,9 @@ import { initCanvas, shiftDown, shiftLeft, shiftRight, shiftUp } from './canvas'
 import { initImages } from '@/imageLoader';
 import { initUnits, startPlayerTurn } from './units/units';
 import { placeItem } from "@/level/items/items";
-import { SPIDER_BAIT } from "@/level/items/randomItems";
 import { initVisibility } from "@/level/visibility";
 import { initGuides } from '@/level/guide/levelGuides';
+import { SPIDER_BAIT } from '@/level/items/itemTypes';
 // import { LIGHTNING_FLAG } from './items/inventory/inventory';
 
 onMounted(() => {

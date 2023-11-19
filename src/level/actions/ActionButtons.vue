@@ -1,6 +1,6 @@
 <template>
     <div id="bottomRight">
-        <div id="actions" v-if="currentTurnUnit()">
+        <div id="actions" v-if="currentTurnUnit">
             <ActionButton
                 v-for="(action, i) in getCurrentActions()"
                 :key="i"
@@ -9,6 +9,7 @@
         </div>
         <FormationsPanel />
         <InventoryPanel />
+        <ProgressPanel />
     </div>
 </template>
 
@@ -16,6 +17,7 @@
 import ActionButton from './ActionButton.vue';
 import InventoryPanel from '@/level/items/inventory/InventoryPanel.vue';
 import FormationsPanel from '../formations/FormationsPanel.vue';
+import ProgressPanel from '../progress/ProgressPanel.vue';
 import { currentTurnUnit } from '../units/units';
 import { getCurrentActions } from './actions';
 </script>

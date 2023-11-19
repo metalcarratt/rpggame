@@ -1,7 +1,7 @@
 <template>
     <div id="inventory" :class="inventoryClasses()" v-if="hasInventory()">
         <span :class="itemClasses(item)" v-for="(item, index) in inventory()" :key="index" @click="clickInventory(item)">
-            <img :src="item.type.img.img.src" />
+            <img :src="itemImg(item.type)" />
             <span class="quantity">{{  item.quantity }}</span>
             <label>{{ item.type.title }}</label>
         </span>
@@ -14,14 +14,17 @@
 import { currentTurnUnit } from "@/level/units/units";
 import { clickInventory, isSelectedInventoryItem, INVENTORY_ACTION } from "@/level/items/inventory/inventory";
 import { isCurrentAction } from "@/level/actions/actions";
+import { typeLookup } from "../itemTypes";
 
-const inventory = () => currentTurnUnit()?.inventory.items;
+const inventory = () => currentTurnUnit.value?.inventory.items;
 
-const hasInventory = () => currentTurnUnit()?.inventory && !currentTurnUnit()?.inventory.isEmpty();
+const hasInventory = () => currentTurnUnit.value?.inventory && !currentTurnUnit.value?.inventory.isEmpty();
 
 const inventoryClasses = () => isCurrentAction(INVENTORY_ACTION) ? 'selected' : '';
 
 const itemClasses = (item) => ['item', isSelectedInventoryItem(item) ? 'selected' : ''];
+
+const itemImg = type => typeLookup[type].img.img.src;
 
 </script>
 
